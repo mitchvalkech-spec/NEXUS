@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>NEXUS - Assistant IA</title>
 
   <style>
@@ -21,181 +20,190 @@
     }
 
     button {
-      border: none;
       cursor: pointer;
-      font-size: 16px;
     }
 
-    /* ACCUEIL */
-
-    #home {
+    .page {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 25px;
     }
 
-    .logo {
-      font-size: 55px;
-      font-weight: bold;
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #27304a;
+      background: #11182d;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 6px;
+    }
+
+    header p {
+      color: #aeb8d0;
+    }
+
+    .home {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+
+    .home-card {
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      background: #11182d;
+      border: 1px solid #27304a;
+      border-radius: 20px;
+      padding: 35px;
+    }
+
+    .home-card h2 {
+      font-size: 28px;
       margin-bottom: 15px;
     }
 
-    .subtitle {
-      color: #b8c0d9;
-      font-size: 18px;
-      max-width: 600px;
+    .home-card p {
+      color: #b8c1d8;
       line-height: 1.6;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
     }
 
-    .start-btn {
-      background: #5865f2;
+    .primary-btn {
+      border: none;
+      background: #4169e1;
       color: white;
-      padding: 16px 30px;
+      padding: 14px 22px;
       border-radius: 12px;
+      font-size: 16px;
       font-weight: bold;
     }
 
-    .start-btn:hover {
-      background: #4752c4;
+    .primary-btn:hover {
+      opacity: 0.9;
     }
 
-    /* CHAT */
-
-    #chatPage {
+    .chat-page {
       display: none;
-      min-height: 100vh;
       flex-direction: column;
+      height: calc(100vh - 85px);
     }
 
-    .topbar {
-      height: 70px;
-      background: #11182d;
-      border-bottom: 1px solid #29324d;
+    .chat-header {
+      padding: 15px 20px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      padding: 0 20px;
+      align-items: center;
+      border-bottom: 1px solid #27304a;
+      background: #11182d;
     }
 
-    .topbar h1 {
-      font-size: 24px;
+    .chat-header h2 {
+      font-size: 20px;
     }
 
-    .back-btn {
-      background: #252d46;
+    .small-btn {
+      border: 1px solid #3a4665;
+      background: #18213a;
       color: white;
-      padding: 10px 15px;
-      border-radius: 8px;
+      padding: 9px 12px;
+      border-radius: 9px;
     }
 
-    .chat-container {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      max-width: 900px;
-      width: 100%;
-      margin: auto;
-    }
-
-    #messages {
+    .messages {
       flex: 1;
       overflow-y: auto;
-      padding: 25px;
+      padding: 20px;
     }
 
     .message {
-      margin-bottom: 18px;
-      display: flex;
-    }
-
-    .message.user {
-      justify-content: flex-end;
-    }
-
-    .message.ai {
-      justify-content: flex-start;
-    }
-
-    .bubble {
-      max-width: 75%;
-      padding: 14px 17px;
+      max-width: 85%;
+      padding: 13px 15px;
+      margin-bottom: 14px;
       border-radius: 15px;
       line-height: 1.5;
       white-space: pre-wrap;
+      word-wrap: break-word;
     }
 
-    .user .bubble {
-      background: #5865f2;
+    .user-message {
+      margin-left: auto;
+      background: #4169e1;
     }
 
-    .ai .bubble {
-      background: #1b243d;
+    .ai-message {
+      margin-right: auto;
+      background: #18213a;
+      border: 1px solid #27304a;
     }
 
     .input-area {
-      padding: 20px;
-      border-top: 1px solid #29324d;
       display: flex;
       gap: 10px;
+      padding: 15px;
+      border-top: 1px solid #27304a;
       background: #11182d;
     }
 
     #messageInput {
       flex: 1;
       resize: none;
-      min-height: 55px;
-      max-height: 150px;
-      border: 1px solid #35405e;
-      background: #0d1427;
-      color: white;
+      min-height: 50px;
+      max-height: 140px;
+      border: 1px solid #34405d;
       border-radius: 12px;
-      padding: 15px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    #messageInput:focus {
-      border-color: #5865f2;
-    }
-
-    #sendBtn {
-      background: #5865f2;
+      background: #0b1020;
       color: white;
-      padding: 0 22px;
+      padding: 14px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    #sendButton {
+      border: none;
+      background: #4169e1;
+      color: white;
+      padding: 0 20px;
       border-radius: 12px;
       font-weight: bold;
     }
 
-    #sendBtn:hover {
-      background: #4752c4;
+    #sendButton:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
-    /* MOBILE */
+    .status {
+      text-align: center;
+      color: #9da8c0;
+      font-size: 13px;
+      padding: 6px;
+    }
 
     @media (max-width: 600px) {
-      .logo {
-        font-size: 42px;
+      .home {
+        padding: 15px;
       }
 
-      .subtitle {
-        font-size: 16px;
+      .home-card {
+        padding: 25px 18px;
       }
 
-      .bubble {
-        max-width: 88%;
+      .message {
+        max-width: 92%;
       }
 
       .input-area {
         padding: 10px;
       }
 
-      #sendBtn {
-        padding: 0 15px;
+      #sendButton {
+        padding: 0 14px;
       }
     }
   </style>
@@ -203,270 +211,448 @@
 
 <body>
 
-  <!-- PAGE D'ACCUEIL -->
+  <div class="page">
 
-  <section id="home">
-
-    <div class="logo">
-      NEXUS
-    </div>
-
-    <p class="subtitle">
-      Ton assistant intelligent pour apprendre,
-      résoudre des exercices de mathématiques
-      et comprendre la physique-chimie.
-    </p>
-
-    <button class="start-btn" id="startBtn">
-      Commencer une conversation
-    </button>
-
-  </section>
-
-
-  <!-- PAGE CHAT -->
-
-  <section id="chatPage">
-
-    <div class="topbar">
-
+    <header>
       <h1>NEXUS</h1>
+      <p>Ton assistant IA pédagogique</p>
+    </header>
 
-      <button class="back-btn" id="backBtn">
-        Accueil
-      </button>
+    <section class="home" id="homePage">
+      <div class="home-card">
 
-    </div>
+        <h2>Bienvenue sur NEXUS</h2>
+
+        <p>
+          NEXUS est ton assistant intelligent pour t'aider
+          à comprendre les mathématiques, la physique-chimie
+          et bien d'autres matières.
+        </p>
+
+        <button class="primary-btn" id="startButton">
+          Commencer une conversation
+        </button>
+
+      </div>
+    </section>
 
 
-    <div class="chat-container">
+    <section class="chat-page" id="chatPage">
 
-      <div id="messages">
+      <div class="chat-header">
 
-        <div class="message ai">
+        <h2>NEXUS IA</h2>
 
-          <div class="bubble">
-            Bonjour ! Je suis NEXUS. 👋
-
-            Pour l'instant, je suis en mode test.
-            Écris-moi quelque chose pour vérifier que le chat fonctionne.
-          </div>
-
-        </div>
+        <button class="small-btn" id="changeKeyButton">
+          Modifier la clé
+        </button>
 
       </div>
 
+      <div class="messages" id="messages"></div>
+
+      <div class="status" id="status">
+        NEXUS est prêt.
+      </div>
 
       <div class="input-area">
 
         <textarea
           id="messageInput"
-          placeholder="Écris ton message..."
+          placeholder="Écris ton exercice ou ta question..."
         ></textarea>
 
-        <button id="sendBtn">
+        <button id="sendButton">
           Envoyer
         </button>
 
       </div>
 
-    </div>
+    </section>
 
-  </section>
+  </div>
 
 
   <script>
 
-    /*
-      NEXUS - VERSION TEST
+    // ======================================================
+    // CONFIGURATION DE NEXUS
+    // ======================================================
 
-      Cette version ne nécessite aucune API.
-      Elle sert uniquement à vérifier que
-      les boutons et le JavaScript fonctionnent.
-    */
+    const API_URL =
+      "https://gen.pollinations.ai/v1/chat/completions";
 
-
-    const home = document.getElementById("home");
-    const chatPage = document.getElementById("chatPage");
-
-    const startBtn = document.getElementById("startBtn");
-    const backBtn = document.getElementById("backBtn");
-
-    const messages = document.getElementById("messages");
-    const messageInput = document.getElementById("messageInput");
-    const sendBtn = document.getElementById("sendBtn");
+    const AI_MODEL =
+      "openai/gpt-5.6-luna";
 
 
-    /*
-      OUVRIR LE CHAT
-    */
+    // ======================================================
+    // 🔴🔴🔴 CLÉ API NEXUS
+    // ======================================================
+    //
+    // COLLE TA NOUVELLE CLÉ ENTRE LES GUILLEMETS CI-DESSOUS.
+    //
+    // ======================================================
 
-    startBtn.addEventListener("click", function () {
+    const POLLINATIONS_API_KEY =
+  sk_BmAEWYalAvtU0h97xukfKG6UdWnuGeox;
 
-      home.style.display = "none";
+
+    // ======================================================
+    // VARIABLES
+    // ======================================================
+
+    let chatHistory = [];
+
+    const homePage =
+      document.getElementById("homePage");
+
+    const chatPage =
+      document.getElementById("chatPage");
+
+    const startButton =
+      document.getElementById("startButton");
+
+    const messages =
+      document.getElementById("messages");
+
+    const messageInput =
+      document.getElementById("messageInput");
+
+    const sendButton =
+      document.getElementById("sendButton");
+
+    const status =
+      document.getElementById("status");
+
+    const changeKeyButton =
+      document.getElementById("changeKeyButton");
+
+
+    // ======================================================
+    // OUVRIR LE CHAT
+    // ======================================================
+
+    startButton.addEventListener("click", function() {
+
+      homePage.style.display = "none";
 
       chatPage.style.display = "flex";
+
+      if (chatHistory.length === 0) {
+
+        addAIMessage(
+          "Bonjour ! Je suis NEXUS. 👋\n\n" +
+          "Envoie-moi ton exercice de mathématiques, " +
+          "de physique-chimie ou ta question."
+        );
+
+      }
 
       messageInput.focus();
 
     });
 
 
-    /*
-      RETOUR À L'ACCUEIL
-    */
+    // ======================================================
+    // RÉCUPÉRER LA CLÉ API
+    // ======================================================
 
-    backBtn.addEventListener("click", function () {
+    function getApiKey() {
 
-      chatPage.style.display = "none";
+      return POLLINATIONS_API_KEY.trim();
 
-      home.style.display = "flex";
+    }
+
+
+    // ======================================================
+    // BOUTON MODIFIER LA CLÉ
+    // ======================================================
+
+    changeKeyButton.addEventListener("click", function() {
+
+      const nouvelleCle =
+        prompt(
+          "Colle ta nouvelle clé API Pollinations :"
+        );
+
+      if (
+        nouvelleCle &&
+        nouvelleCle.trim() !== ""
+      ) {
+
+        alert(
+          "Pour modifier définitivement la clé, " +
+          "remplace-la dans le code à l'endroit " +
+          "indiqué 🔴."
+        );
+
+      }
 
     });
 
 
-    /*
-      AJOUTER UN MESSAGE
-    */
+    // ======================================================
+    // AFFICHER MESSAGE UTILISATEUR
+    // ======================================================
 
-    function addMessage(text, type) {
+    function addUserMessage(text) {
 
-      const message = document.createElement("div");
+      const message =
+        document.createElement("div");
 
-      message.className = "message " + type;
+      message.className =
+        "message user-message";
 
-
-      const bubble = document.createElement("div");
-
-      bubble.className = "bubble";
-
-      bubble.textContent = text;
-
-
-      message.appendChild(bubble);
+      message.textContent =
+        text;
 
       messages.appendChild(message);
 
-
-      messages.scrollTop = messages.scrollHeight;
-
-    }
-
-
-    /*
-      RÉPONSE DE TEST DE NEXUS
-    */
-
-    function nexusResponse(userText) {
-
-      const text = userText.toLowerCase();
-
-
-      if (text.includes("bonjour") ||
-          text.includes("salut") ||
-          text.includes("hello")) {
-
-        return "Bonjour ! 👋 Je suis NEXUS. Je fonctionne correctement.";
-
-      }
-
-
-      if (text.includes("math")) {
-
-        return "Les mathématiques seront bientôt intégrées à mon intelligence. Pour l'instant, le système de conversation fonctionne.";
-
-      }
-
-
-      if (text.includes("physique")) {
-
-        return "Le module de physique-chimie sera ajouté dans la prochaine étape.";
-
-      }
-
-
-      if (text.includes("qui es tu") ||
-          text.includes("qui es-tu")) {
-
-        return "Je suis NEXUS, ton futur assistant intelligent.";
-
-      }
-
-
-      return "J'ai bien reçu ton message : \"" +
-             userText +
-             "\"\n\nLe système de chat fonctionne ! La prochaine étape sera de connecter la véritable intelligence de NEXUS.";
+      messages.scrollTop =
+        messages.scrollHeight;
 
     }
 
 
-    /*
-      ENVOYER UN MESSAGE
-    */
+    // ======================================================
+    // AFFICHER MESSAGE NEXUS
+    // ======================================================
 
-    function sendMessage() {
+    function addAIMessage(text) {
 
-      const text = messageInput.value.trim();
+      const message =
+        document.createElement("div");
+
+      message.className =
+        "message ai-message";
+
+      message.textContent =
+        text;
+
+      messages.appendChild(message);
+
+      messages.scrollTop =
+        messages.scrollHeight;
+
+    }
 
 
-      if (text === "") {
+    // ======================================================
+    // ENVOYER LE MESSAGE
+    // ======================================================
+
+    async function sendMessage() {
+
+      const text =
+        messageInput.value.trim();
+
+      if (!text) {
 
         return;
 
       }
 
 
-      addMessage(text, "user");
+      const apiKey =
+        getApiKey();
 
+
+      if (!apiKey ||
+          apiKey === "COLLE_TA_NOUVELLE_CLÉ_ICI") {
+
+        addAIMessage(
+          "⚠️ La clé API NEXUS n'est pas encore configurée.\n\n" +
+          "Ouvre le code et colle ta clé dans la ligne " +
+          "marquée 🔴."
+        );
+
+        return;
+
+      }
+
+
+      addUserMessage(text);
 
       messageInput.value = "";
 
+      sendButton.disabled = true;
 
-      sendBtn.disabled = true;
+      messageInput.disabled = true;
+
+      status.textContent =
+        "NEXUS réfléchit...";
 
 
-      setTimeout(function () {
+      chatHistory.push({
 
-        const response = nexusResponse(text);
+        role: "user",
 
-        addMessage(response, "ai");
+        content: text
 
-        sendBtn.disabled = false;
+      });
+
+
+      try {
+
+        const response =
+          await fetch(
+            API_URL,
+            {
+              method: "POST",
+
+              headers: {
+
+                "Content-Type":
+                  "application/json",
+
+                "Authorization":
+                  "Bearer " + apiKey
+
+              },
+
+              body: JSON.stringify({
+
+                model: AI_MODEL,
+
+                messages: [
+
+                  {
+                    role: "system",
+
+                    content:
+                      "Tu es NEXUS, un assistant " +
+                      "pédagogique intelligent. " +
+                      "Tu aides principalement les élèves " +
+                      "en mathématiques, physique-chimie " +
+                      "et sciences. " +
+                      "Explique les réponses étape par étape " +
+                      "avec des mots simples. " +
+                      "Ne donne pas seulement la réponse : " +
+                      "aide l'élève à comprendre."
+                  },
+
+                  ...chatHistory
+
+                ],
+
+                temperature: 0.7
+
+              })
+
+            }
+          );
+
+
+        if (!response.ok) {
+
+          const errorText =
+            await response.text();
+
+          throw new Error(
+            "Erreur API " +
+            response.status +
+            " : " +
+            errorText
+          );
+
+        }
+
+
+        const data =
+          await response.json();
+
+
+        const aiText =
+          data?.choices?.[0]?.message?.content;
+
+
+        if (!aiText) {
+
+          throw new Error(
+            "La réponse de l'API est vide."
+          );
+
+        }
+
+
+        chatHistory.push({
+
+          role: "assistant",
+
+          content: aiText
+
+        });
+
+
+        addAIMessage(aiText);
+
+        status.textContent =
+          "NEXUS est prêt.";
+
+      }
+
+      catch (error) {
+
+        console.error(
+          "Erreur NEXUS :",
+          error
+        );
+
+        addAIMessage(
+          "❌ NEXUS n'a pas pu obtenir de réponse.\n\n" +
+          "Vérifie ta clé API et ta connexion Internet."
+        );
+
+        status.textContent =
+          "Erreur de connexion.";
+
+      }
+
+      finally {
+
+        sendButton.disabled = false;
+
+        messageInput.disabled = false;
 
         messageInput.focus();
 
-      }, 500);
+      }
 
     }
 
 
-    /*
-      BOUTON ENVOYER
-    */
+    // ======================================================
+    // BOUTON ENVOYER
+    // ======================================================
 
-    sendBtn.addEventListener("click", function () {
+    sendButton.addEventListener(
+      "click",
+      sendMessage
+    );
 
-      sendMessage();
 
-    });
+    // ======================================================
+    // TOUCHE ENTRÉE
+    // ======================================================
 
+    messageInput.addEventListener(
+      "keydown",
+      function(event) {
 
-    /*
-      ENVOYER AVEC LA TOUCHE ENTRÉE
-    */
+        if (
+          event.key === "Enter" &&
+          !event.shiftKey
+        ) {
 
-    messageInput.addEventListener("keydown", function (event) {
+          event.preventDefault();
 
-      if (event.key === "Enter" && !event.shiftKey) {
+          sendMessage();
 
-        event.preventDefault();
-
-        sendMessage();
+        }
 
       }
-
-    });
-
+    );
 
   </script>
 
