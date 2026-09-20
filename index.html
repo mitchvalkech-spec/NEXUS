@@ -90,19 +90,22 @@
             gap: 1rem;
         }
 
-        textarea {
+        input[type="email"], textarea {
             width: 100%;
-            height: 120px;
             background-color: #2A2A2A;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
             color: #FFFFFF;
             font-size: 1rem;
+        }
+
+        textarea {
+            height: 120px;
             resize: vertical;
         }
 
-        textarea:focus {
+        input[type="email"]:focus, textarea:focus {
             outline: none;
             border-color: var(--secondary-red);
             box-shadow: 0 0 5px rgba(163, 41, 63, 0.5);
@@ -140,6 +143,44 @@
             line-height: 1.5;
         }
 
+        .notebook-area {
+            width: 100%;
+            height: 100px;
+            background-color: #2A2A2A;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #FFFFFF;
+            font-size: 0.95rem;
+            margin-top: 1rem;
+            resize: vertical;
+        }
+
+        #admin-panel {
+            display: none;
+            background-color: #2A1216;
+            border: 2px solid var(--secondary-red);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-bottom: 2rem;
+        }
+
+        .user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1E1E1E;
+            padding: 0.5rem 1rem;
+            margin-top: 0.5rem;
+            border-radius: 6px;
+        }
+
+        .btn-danger {
+            background-color: #A3293F;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
         footer {
             text-align: center;
             padding: 1.5rem;
@@ -158,31 +199,133 @@
     </header>
 
     <main>
-        <section class="card">
-            <h2>Qu'est-ce que Nexus ?</h2>
-            <p class="description-text">
-                Nexus est une application conçue pour vous simplifier la vie. Face à un problème complexe ou bloquant, Nexus analyse la situation, décompose le défi en actions claires et vous indique précisément quoi faire, étape par étape, pour réussir à le surmonter.
-            </p>
+        <!-- Section Connexion / Identification -->
+        <section class="card" id="login-section">
+            <h2>Connexion à Nexus</h2>
+            <p class="description-text">Entrez votre adresse e-mail pour accéder à l'application.</p>
+            <div class="form-group">
+                <input type="email" id="user-email" placeholder="votre.email@exemple.com">
+                <button onclick="connecterUtilisateur()">Se connecter</button>
+            </div>
         </section>
 
-        <section class="card">
-            <h2>Résoudre un problème</h2>
+        <!-- Panneau Administrateur -->
+        <div id="admin-panel">
+            <h2>Panneau d'Administration (Admin)</h2>
+            <p class="description-text">Bienvenue Maître. Vous pouvez voir les utilisateurs connectés et les déconnecter si nécessaire.</p>
+            <div id="users-list"></div>
+        </div>
+
+        <!-- Section Application principale -->
+        <section class="card" id="app-section" style="display: none;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="margin-bottom: 0;">Résoudre un problème</h2>
+                <button onclick="deconnecter()" class="btn-danger">Se déconnecter</button>
+            </div>
             <div class="form-group">
                 <label for="problem-input" style="color: var(--text-main); font-weight: 500;">Décrivez votre problème ci-dessous :</label>
-                <textarea id="problem-input" placeholder="Ex: Je n'arrive pas à configurer mon serveur ou je ne sais pas comment structurer mon projet..."></textarea>
+                <textarea id="problem-input" placeholder="Ex: Comment démarrer un projet ou résoudre un blocage technique..."></textarea>
                 <button id="solve-btn" onclick="resoudreProbleme()">Lancer la résolution</button>
             </div>
             <div id="result-container"></div>
+            
+            <div style="margin-top: 2rem;">
+                <h3 style="color: var(--secondary-red); font-size: 1.2rem; margin-bottom: 0.5rem;">Bloc-notes de sauvegarde</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Gardez ici vos solutions et notes importantes proposées par Nexus :</p>
+                <textarea class="notebook-area" id="user-notebook" placeholder="Collez ou notez vos solutions ici..."></textarea>
+            </div>
         </section>
     </main>
 
     <footer>
-        &copy; 2026 Nexus Project. Tous droits réservés.
+        &copy; 2026 Nexus Project — Créé par Otoghe Nzé Aristide. Tous droits réservés.
     </footer>
 
     <script>
-        // Remplacez les plus par votre clé API
-        const API_KEY = "sk_BmAEWYalAvtU0h97xukfKG6UdWnuGeox"; 
+        // Remplacez les plus par votre clé API OpenAI
+        const OPENAI_API_KEY = "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"; 
+        const ADMIN_EMAIL = "aristideotoghe@gmail.com";
+
+        window.onload = function() {
+            const savedEmail = localStorage.getItem("nexus_user_email");
+            if (savedEmail) {
+                activerInterface(savedEmail);
+            }
+        };
+
+        function connecterUtilisateur() {
+            const emailInput = document.getElementById('user-email').value.trim().toLowerCase();
+            if (!emailInput || !emailInput.includes('@')) {
+                alert("Veuillez entrer une adresse e-mail valide.");
+                return;
+            }
+
+            localStorage.setItem("nexus_user_email", emailInput);
+            
+            let activeUsers = JSON.parse(localStorage.getItem("nexus_active_users") || "[]");
+            if (!activeUsers.includes(emailInput)) {
+                activeUsers.push(emailInput);
+                localStorage.setItem("nexus_active_users", JSON.stringify(activeUsers));
+            }
+
+            activerInterface(emailInput);
+        }
+
+        function activerInterface(email) {
+            document.getElementById('login-section').style.display = 'none';
+            document.getElementById('app-section').style.display = 'block';
+
+            const savedNote = localStorage.getItem("nexus_note_" + email);
+            if (savedNote) {
+                document.getElementById('user-notebook').value = savedNote;
+            }
+
+            document.getElementById('user-notebook').oninput = function() {
+                localStorage.setItem("nexus_note_" + email, this.value);
+            };
+
+            if (email === ADMIN_EMAIL.toLowerCase()) {
+                document.getElementById('admin-panel').style.display = 'block';
+                rafraichirAdminPanel();
+            }
+        }
+
+        function deconnecter() {
+            localStorage.removeItem("nexus_user_email");
+            location.reload();
+        }
+
+        function rafraichirAdminPanel() {
+            const usersListDiv = document.getElementById('users-list');
+            let activeUsers = JSON.parse(localStorage.getItem("nexus_active_users") || "[]");
+            
+            if (activeUsers.length === 0) {
+                usersListDiv.innerHTML = "<p style='color: var(--text-muted);'>Aucun utilisateur enregistré.</p>";
+                return;
+            }
+
+            let html = "";
+            activeUsers.forEach(user => {
+                html += `<div class="user-item">
+                    <span>${user} ${user === ADMIN_EMAIL.toLowerCase() ? '(Admin)' : ''}</span>
+                    <button class="btn-danger" onclick="forcerDeconnexion('${user}')">Déconnecter</button>
+                </div>`;
+            });
+            usersListDiv.innerHTML = html;
+        }
+
+        function forcerDeconnexion(emailUser) {
+            let activeUsers = JSON.parse(localStorage.getItem("nexus_active_users") || "[]");
+            activeUsers = activeUsers.filter(u => u !== emailUser);
+            localStorage.setItem("nexus_active_users", JSON.stringify(activeUsers));
+            
+            if (localStorage.getItem("nexus_user_email") === emailUser) {
+                localStorage.removeItem("nexus_user_email");
+                location.reload();
+            } else {
+                rafraichirAdminPanel();
+            }
+        }
 
         async function resoudreProbleme() {
             const problem = document.getElementById('problem-input').value.trim();
@@ -190,17 +333,17 @@
             const solveBtn = document.getElementById('solve-btn');
 
             if (!problem) {
-                alert("Veuillez décrire un problème avant de lancer la résolution.");
+                alert("Veuillez décrire un problème.");
                 return;
             }
 
-            if (API_KEY.includes("+++") || API_KEY === "") {
-                alert("Veuillez insérer votre clé API valide dans le code source.");
+            if (OPENAI_API_KEY.includes("+") || OPENAI_API_KEY === "") {
+                alert("Veuillez insérer votre clé API OpenAI valide dans le code source.");
                 return;
             }
 
             resultContainer.style.display = "block";
-            resultContainer.textContent = "Nexus analyse votre problème et élabore les étapes de résolution...";
+            resultContainer.textContent = "Nexus analyse votre situation...";
             solveBtn.disabled = true;
 
             try {
@@ -208,14 +351,14 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${API_KEY}`
+                        "Authorization": `Bearer ${OPENAI_API_KEY}`
                     },
                     body: JSON.stringify({
                         model: "gpt-4o-mini",
                         messages: [
                             {
                                 role: "system",
-                                content: "Tu es Nexus, une application experte en résolution de problèmes. Pour chaque problème soumis, fournis une analyse claire, structurée sous forme d'étapes concrètes et numérotées que l'utilisateur doit suivre pour tout résoudre."
+                                content: "Tu es Nexus, une application experte et universelle conçue pour résoudre tous types de problèmes. Si on te demande qui t'a créé, réponds clairement que tu as été créé par Otoghe Nzé Aristide. Pour chaque problème soumis, fournis une analyse claire, précise et découpée en étapes concrètes et numérotées."
                             },
                             {
                                 role: "user",
@@ -227,7 +370,7 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error("Erreur lors de la communication avec l'API.");
+                    throw new Error("Erreur de communication avec l'API OpenAI.");
                 }
 
                 const data = await response.json();
@@ -235,7 +378,7 @@
                 resultContainer.textContent = solution;
 
             } catch (error) {
-                resultContainer.textContent = "Erreur : Impossible de joindre le service de résolution. Vérifiez votre clé API ou votre connexion.";
+                resultContainer.textContent = "Erreur : Impossible de joindre l'intelligence artificielle OpenAI. Vérifiez votre clé API.";
                 console.error(error);
             } finally {
                 solveBtn.disabled = false;
