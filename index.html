@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -40,7 +40,7 @@ a{color:#53d7ff}
     <div class="badge">✦ NEXUS AI</div>
     <h1>Une idée en tête ?</h1>
     <p>Apprends, organise tes idées, résous tes problèmes et développe tes projets avec NEXUS.</p>
-    <button class="primary" onclick="showPanel('chat')">Commencer une conversation</button>
+    <button class="primary" onclick="startConversation()">Commencer une conversation</button>
   </div>
   <div class="grid">
     <div class="card"><h3>🤖 Assistant</h3><p>Pose une question et obtiens une réponse structurée.</p></div>
@@ -56,7 +56,7 @@ a{color:#53d7ff}
     <div id="messages" class="messages">
       <div class="msg bot">Bonjour 👋 Je suis NEXUS AI. Pose-moi une question pour commencer.</div>
     </div>
-    <div class="chatbar"><textarea id="prompt" placeholder="Écrivez votre message..."></textarea><button class="primary" onclick="sendMessage()">Envoyer</button></div>
+    <div class="chatbar"><textarea id="prompt" autocomplete="off" inputmode="text" placeholder="Écrivez votre message..."></textarea><button class="primary" onclick="sendMessage()">Envoyer</button></div>
     <div class="notice">Cette version fonctionne sans crédit externe. Pour une vraie IA connectée à Gemini/OpenAI, il faudra ensuite ajouter un petit serveur sécurisé afin de ne jamais exposer la clé API.</div>
   </div>
 </section>
@@ -90,6 +90,30 @@ a{color:#53d7ff}
 
 <footer>NEXUS — Créé par Otoghe Nzé Aristide</footer>
 
+<div id="authChoice" class="modal">
+ <div class="modalbox">
+  <div class="badge">NEXUS</div>
+  <h2>Accéder à NEXUS AI</h2>
+  <p>Connecte-toi ou crée un compte pour commencer la conversation.</p>
+  <button class="primary" style="width:100%;margin-bottom:10px" onclick="openLoginFromChoice()">Se connecter</button>
+  <button class="secondary" style="width:100%" onclick="openRegister()">Créer un compte</button>
+  <div class="notice">Choisis une option pour accéder à l’assistant.</div>
+ </div>
+</div>
+
+<div id="registerModal" class="modal">
+ <div class="modalbox">
+  <div class="badge">NEXUS</div>
+  <h2>Créer un compte</h2>
+  <input id="registerName" placeholder="Nom ou prénom">
+  <input id="registerEmail" type="email" placeholder="Adresse e-mail">
+  <input id="registerPassword" type="password" placeholder="Mot de passe">
+  <button class="primary" onclick="register()">Créer mon compte</button>
+  <button class="secondary" onclick="closeRegister()">Annuler</button>
+  <p style="color:#9eabc0;font-size:13px">Déjà un compte ? <a href="#" onclick="openLoginFromRegister();return false">Se connecter</a></p>
+ </div>
+</div>
+
 <div id="modal" class="modal">
  <div class="modalbox">
   <h2>Connexion NEXUS</h2>
@@ -108,6 +132,25 @@ function showPanel(id){
  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
  document.getElementById(id).classList.add('active');
  window.scrollTo(0,0);
+}
+function startConversation(){
+ const email=localStorage.getItem('nexus_email');
+ if(email){showPanel('chat');setTimeout(()=>document.getElementById('prompt').focus(),100);}
+ else{document.getElementById('authChoice').style.display='flex';}
+}
+function openLoginFromChoice(){document.getElementById('authChoice').style.display='none';openLogin()}
+function openRegister(){document.getElementById('authChoice').style.display='none';document.getElementById('registerModal').style.display='flex'}
+function closeRegister(){document.getElementById('registerModal').style.display='none'}
+function openLoginFromRegister(){closeRegister();openLogin()}
+function register(){
+ const name=document.getElementById('registerName').value.trim();
+ const email=document.getElementById('registerEmail').value.trim().toLowerCase();
+ const password=document.getElementById('registerPassword').value;
+ if(!name||!email.includes('@')||password.length<4){alert('Remplis tous les champs. Le mot de passe doit contenir au moins 4 caractères.');return}
+ localStorage.setItem('nexus_user',JSON.stringify({name,email}));
+ localStorage.setItem('nexus_email',email);
+ closeRegister();showPanel('chat');setTimeout(()=>document.getElementById('prompt').focus(),100);
+ alert('Compte créé. Bienvenue '+name+' !');
 }
 function openLogin(){document.getElementById('modal').style.display='flex'}
 function closeLogin(){document.getElementById('modal').style.display='none'}
