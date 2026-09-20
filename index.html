@@ -1,1166 +1,246 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080b12">
-
-<title>NEXUS</title>
-
-<style>
-
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body{
-    background:#080b12;
-    color:#ffffff;
-    font-family:Arial,Helvetica,sans-serif;
-    min-height:100vh;
-}
-
-button,
-input,
-textarea,
-select{
-    font-family:inherit;
-}
-
-button{
-    cursor:pointer;
-}
-
-.hidden{
-    display:none !important;
-}
-
-
-/* =========================================================
-   HEADER
-========================================================= */
-
-header{
-    height:70px;
-    position:sticky;
-    top:0;
-    z-index:1000;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    padding:0 25px;
-
-    background:#0c1019;
-    border-bottom:1px solid #202737;
-}
-
-.logo{
-    font-size:28px;
-    font-weight:900;
-    letter-spacing:4px;
-    cursor:pointer;
-}
-
-.logo span{
-    color:#4da3ff;
-}
-
-.header-right{
-    display:flex;
-    align-items:center;
-    gap:10px;
-}
-
-.user-name{
-    color:#b5c0d0;
-    font-size:14px;
-}
-
-.header-button{
-    border:none;
-    border-radius:9px;
-    padding:10px 14px;
-    color:white;
-    font-weight:bold;
-    transition:.2s;
-}
-
-.header-button:hover{
-    filter:brightness(1.15);
-}
-
-.admin-button{
-    background:#6338d8;
-}
-
-.logout-button{
-    background:#b83232;
-}
-
-
-/* =========================================================
-   PAGES
-========================================================= */
-
-.page{
-    min-height:calc(100vh - 70px);
-}
-
-
-/* =========================================================
-   ACCUEIL
-========================================================= */
-
-.home{
-    max-width:1200px;
-    margin:auto;
-    padding:60px 25px;
-}
-
-.hero{
-    text-align:center;
-    padding:40px 10px 55px;
-}
-
-.hero h1{
-    font-size:72px;
-    letter-spacing:12px;
-    margin-bottom:18px;
-}
-
-.hero h1 span{
-    color:#4da3ff;
-}
-
-.hero p{
-    max-width:720px;
-    margin:auto;
-    color:#9aa7ba;
-    line-height:1.7;
-    font-size:18px;
-}
-
-.primary-button{
-    margin-top:25px;
-    padding:14px 28px;
-
-    border:none;
-    border-radius:11px;
-
-    background:#4da3ff;
-    color:#06101c;
-
-    font-size:16px;
-    font-weight:800;
-
-    transition:.2s;
-}
-
-.primary-button:hover{
-    transform:translateY(-2px);
-    filter:brightness(1.08);
-}
-
-.primary-button:disabled{
-    opacity:.6;
-    cursor:not-allowed;
-    transform:none;
-}
-
-.home-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:18px;
-}
-
-.home-card{
-    background:#0d121c;
-    border:1px solid #202938;
-    border-radius:16px;
-    padding:25px;
-    min-height:150px;
-    transition:.2s;
-}
-
-.home-card:hover{
-    transform:translateY(-3px);
-    border-color:#4da3ff;
-}
-
-.home-card h3{
-    margin-bottom:12px;
-}
-
-.home-card p{
-    color:#909db1;
-    line-height:1.55;
-}
-
-
-/* =========================================================
-   AUTHENTIFICATION
-========================================================= */
-
-.auth-container{
-    max-width:450px;
-    margin:55px auto;
-    padding:20px;
-}
-
-.auth-box{
-    background:#0d121c;
-    border:1px solid #222c3d;
-    border-radius:18px;
-    padding:30px;
-}
-
-.auth-box h2{
-    margin-bottom:10px;
-}
-
-.auth-box > p{
-    color:#8f9bad;
-    margin-bottom:25px;
-}
-
-.form-group{
-    margin-bottom:17px;
-}
-
-.form-group label{
-    display:block;
-    margin-bottom:7px;
-    color:#b8c3d4;
-    font-size:14px;
-}
-
-.form-group input,
-.form-group select{
-    width:100%;
-    padding:13px;
-
-    background:#080b12;
-    color:#fff;
-
-    border:1px solid #2b3547;
-    border-radius:9px;
-
-    outline:none;
-}
-
-.form-group input:focus,
-.form-group select:focus{
-    border-color:#4da3ff;
-}
-
-.form-error{
-    color:#e06a6a;
-    font-size:13px;
-    margin-top:-9px;
-    margin-bottom:14px;
-    min-height:16px;
-}
-
-.auth-switch{
-    margin-top:20px;
-    text-align:center;
-    color:#8f9bad;
-}
-
-.link-button{
-    background:none;
-    border:none;
-    color:#4da3ff;
-    font-weight:bold;
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-.dashboard{
-    max-width:1200px;
-    margin:auto;
-    padding:35px 25px;
-}
-
-.dashboard-title{
-    margin-bottom:28px;
-}
-
-.dashboard-title h2{
-    font-size:30px;
-}
-
-.dashboard-title p{
-    color:#8f9bad;
-    margin-top:8px;
-}
-
-.direct-card{
-    background:#101621;
-    border:1px solid #243044;
-    border-radius:17px;
-
-    padding:25px;
-
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-
-    gap:20px;
-    margin-bottom:25px;
-}
-
-.direct-card p{
-    color:#8f9bad;
-    margin-top:7px;
-}
-
-.categories{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:17px;
-}
-
-.category-card{
-    background:#0d121c;
-    border:1px solid #202938;
-    border-radius:15px;
-    padding:22px;
-    cursor:pointer;
-    transition:.2s;
-}
-
-.category-card:hover{
-    border-color:#4da3ff;
-    transform:translateY(-2px);
-}
-
-.category-card h3{
-    margin-bottom:8px;
-}
-
-.category-card p{
-    color:#8f9bad;
-    line-height:1.5;
-}
-
-
-/* =========================================================
-   CHAT
-========================================================= */
-
-.chat-page{
-    height:calc(100vh - 70px);
-    display:flex;
-    flex-direction:column;
-}
-
-.chat-header{
-    padding:18px 25px;
-    background:#0c1019;
-    border-bottom:1px solid #202737;
-}
-
-.chat-header h2{
-    font-size:20px;
-}
-
-.chat-header p{
-    color:#7f8da2;
-    margin-top:5px;
-    font-size:13px;
-}
-
-.server-status{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:10px;
-
-    color:#8491a6;
-    font-size:12px;
-}
-
-.status-dot{
-    width:8px;
-    height:8px;
-    border-radius:50%;
-    background:#777;
-}
-
-.status-dot.online{
-    background:#39c77a;
-}
-
-.status-dot.offline{
-    background:#d44b4b;
-}
-
-.chat-messages{
-    flex:1;
-    width:100%;
-    max-width:1000px;
-
-    margin:auto;
-    padding:25px;
-
-    overflow-y:auto;
-}
-
-.empty-chat{
-    color:#6f7d91;
-    text-align:center;
-    margin-top:40px;
-    line-height:1.6;
-}
-
-.message{
-    display:flex;
-    margin-bottom:18px;
-}
-
-.message.user{
-    justify-content:flex-end;
-}
-
-.message-content{
-    max-width:75%;
-    padding:13px 16px;
-    border-radius:15px;
-
-    line-height:1.5;
-    white-space:pre-wrap;
-}
-
-.message.ai .message-content{
-    background:#111827;
-    border:1px solid #263248;
-}
-
-.message.user .message-content{
-    background:#245f9e;
-}
-
-.typing{
-    color:#8d9ab0;
-    padding:10px;
-    font-style:italic;
-}
-
-.chat-bar{
-    padding:15px 20px;
-
-    background:#0c1019;
-    border-top:1px solid #202737;
-}
-
-.chat-form{
-    max-width:1000px;
-    margin:auto;
-
-    display:flex;
-    gap:9px;
-}
-
-.chat-form textarea{
-    flex:1;
-
-    min-height:48px;
-    max-height:130px;
-
-    resize:none;
-
-    padding:13px;
-
-    background:#080b12;
-    color:#fff;
-
-    border:1px solid #2a3547;
-    border-radius:12px;
-
-    outline:none;
-}
-
-.chat-form textarea:focus{
-    border-color:#4da3ff;
-}
-
-.chat-button{
-    width:50px;
-
-    border:none;
-    border-radius:11px;
-
-    background:#4da3ff;
-
-    font-size:19px;
-    transition:.2s;
-}
-
-.chat-button:hover{
-    filter:brightness(1.1);
-}
-
-.chat-button:disabled{
-    opacity:.5;
-    cursor:not-allowed;
-}
-
-.mic-button{
-    background:#202b3c;
-    color:white;
-}
-
-.mic-button.recording{
-    background:#b83232;
-}
-
-.mic-help{
-    max-width:1000px;
-    margin:7px auto 0;
-
-    color:#6f7d91;
-    font-size:11px;
-}
-
-
-/* =========================================================
-   ADMIN
-========================================================= */
-
-.admin-page{
-    max-width:1200px;
-    margin:auto;
-    padding:35px 25px;
-}
-
-.admin-title{
-    margin-bottom:25px;
-}
-
-.admin-title h2{
-    font-size:30px;
-}
-
-.admin-title p{
-    color:#8f9bad;
-    margin-top:7px;
-}
-
-.admin-stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:17px;
-    margin-bottom:25px;
-}
-
-.stat-card{
-    background:#0d121c;
-    border:1px solid #222c3d;
-    border-radius:15px;
-    padding:23px;
-}
-
-.stat-card span{
-    display:block;
-    color:#8491a6;
-    font-size:13px;
-    margin-bottom:8px;
-}
-
-.stat-card strong{
-    font-size:28px;
-}
-
-.users-box{
-    background:#0d121c;
-    border:1px solid #222c3d;
-    border-radius:15px;
-    overflow:auto;
-}
-
-.users-box h3{
-    padding:20px;
-    border-bottom:1px solid #222c3d;
-}
-
-.users-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-.users-table th,
-.users-table td{
-    padding:14px 16px;
-    text-align:left;
-    border-bottom:1px solid #1d2635;
-    white-space:nowrap;
-}
-
-.users-table th{
-    color:#8e9aae;
-    font-size:13px;
-}
-
-.users-table td{
-    color:#dce3ed;
-}
-
-.empty-row td{
-    color:#6f7d91;
-    text-align:center;
-    padding:25px;
-}
-
-
-/* =========================================================
-   NOTIFICATION
-========================================================= */
-
-.notification{
-    position:fixed;
-
-    left:50%;
-    bottom:25px;
-
-    transform:translateX(-50%) translateY(100px);
-
-    opacity:0;
-
-    background:#151d2b;
-
-    border:1px solid #344158;
-
-    color:white;
-
-    padding:13px 20px;
-
-    border-radius:10px;
-
-    z-index:5000;
-
-    transition:.3s;
-
-    max-width:90%;
-
-    text-align:center;
-}
-
-.notification.show{
-    transform:translateX(-50%) translateY(0);
-    opacity:1;
-}
-
-.notification.success{
-    border-color:#2e9d68;
-}
-
-.notification.error{
-    border-color:#b63a3a;
-}
-
-
-/* =========================================================
-   MOBILE
-========================================================= */
-
-@media(max-width:800px){
-
-    header{
-        padding:0 15px;
-    }
-
-    .logo{
-        font-size:23px;
-    }
-
-    .user-name{
-        display:none;
-    }
-
-    .hero h1{
-        font-size:45px;
-        letter-spacing:6px;
-    }
-
-    .home-grid,
-    .categories,
-    .admin-stats{
-        grid-template-columns:1fr;
-    }
-
-    .direct-card{
-        flex-direction:column;
-        align-items:flex-start;
-    }
-
-    .message-content{
-        max-width:88%;
-    }
-
-    .chat-messages{
-        padding:15px;
-    }
-
-    .chat-bar{
-        padding:10px;
-    }
-
-    .chat-form textarea{
-        min-width:0;
-    }
-
-    .header-button{
-        padding:8px 10px;
-        font-size:12px;
-    }
-
-}
-
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus - Résolution Intelligente de Problèmes</title>
+    <style>
+        :root {
+            --primary-bordeaux: #7A1C2E;
+            --secondary-red: #A3293F;
+            --dark-bg: #121212;
+            --card-bg: #1E1E1E;
+            --text-main: #E0E0E0;
+            --text-muted: #A0A0A0;
+            --border-color: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: linear-gradient(135deg, #4A0E1A, var(--primary-bordeaux));
+            padding: 2.5rem 2rem;
+            text-align: center;
+            border-bottom: 3px solid var(--secondary-red);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        header h1 {
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            color: #FFFFFF;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        header p {
+            font-size: 1.1rem;
+            color: #FFD1DC;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        main {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            color: var(--secondary-red);
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-bordeaux);
+            padding-left: 10px;
+        }
+
+        .description-text {
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            background-color: #2A2A2A;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            color: #FFFFFF;
+            font-size: 1rem;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--secondary-red);
+            box-shadow: 0 0 5px rgba(163, 41, 63, 0.5);
+        }
+
+        button {
+            background-color: var(--primary-bordeaux);
+            color: #FFFFFF;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            align-self: flex-end;
+        }
+
+        button:hover {
+            background-color: var(--secondary-red);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        #result-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #161616;
+            border-radius: 8px;
+            border-left: 4px solid var(--secondary-red);
+            display: none;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            background-color: #0D0D0D;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+    </style>
 </head>
-
-
 <body>
 
+    <header>
+        <h1>NEXUS</h1>
+        <p>Votre assistant intelligent pour identifier et résoudre vos problèmes étape par étape.</p>
+    </header>
 
-<!-- =========================================================
-   HEADER
-========================================================= -->
-
-<header>
-
-    <div class="logo" id="logoHome">
-        NE<span>X</span>US
-    </div>
-
-    <div class="header-right">
-
-        <div
-            id="userName"
-            class="user-name hidden">
-        </div>
-
-        <button
-            type="button"
-            id="adminButton"
-            class="header-button admin-button hidden">
-            Admin
-        </button>
-
-        <button
-            type="button"
-            id="logoutButton"
-            class="header-button logout-button hidden">
-            Déconnexion
-        </button>
-
-    </div>
-
-</header>
-
-
-<!-- =========================================================
-   ACCUEIL
-========================================================= -->
-
-<section
-    id="homePage"
-    class="page">
-
-    <div class="home">
-
-        <div class="hero">
-
-            <h1>
-                NE<span>X</span>US
-            </h1>
-
-            <p>
-                Une intelligence artificielle pensée pour
-                apprendre, réfléchir, résoudre des problèmes
-                et s'adapter à son utilisateur.
+    <main>
+        <section class="card">
+            <h2>Qu'est-ce que Nexus ?</h2>
+            <p class="description-text">
+                Nexus est une application conçue pour vous simplifier la vie. Face à un problème complexe ou bloquant, Nexus analyse la situation, décompose le défi en actions claires et vous indique précisément quoi faire, étape par étape, pour réussir à le surmonter.
             </p>
+        </section>
 
-            <button
-                type="button"
-                id="startButton"
-                class="primary-button">
-                Commencer
-            </button>
-
-        </div>
-
-
-        <div class="home-grid">
-
-            <div class="home-card">
-                <h3>📚 Études</h3>
-                <p>
-                    Mathématiques, physique, chimie
-                    et autres matières.
-                </p>
+        <section class="card">
+            <h2>Résoudre un problème</h2>
+            <div class="form-group">
+                <label for="problem-input" style="color: var(--text-main); font-weight: 500;">Décrivez votre problème ci-dessous :</label>
+                <textarea id="problem-input" placeholder="Ex: Je n'arrive pas à configurer mon serveur ou je ne sais pas comment structurer mon projet..."></textarea>
+                <button id="solve-btn" onclick="resoudreProbleme()">Lancer la résolution</button>
             </div>
-
-            <div class="home-card">
-                <h3>🚀 Projets</h3>
-                <p>
-                    Organise et développe tes idées
-                    étape par étape.
-                </p>
-            </div>
-
-            <div class="home-card">
-                <h3>🏢 Entreprise</h3>
-                <p>
-                    Organisation, réflexion et aide
-                    pour tes projets.
-                </p>
-            </div>
-
-            <div class="home-card">
-                <h3>💻 Technologie</h3>
-                <p>
-                    Programmation, informatique et IA.
-                </p>
-            </div>
-
-            <div class="home-card">
-                <h3>🧠 Réflexion</h3>
-                <p>
-                    Analyse et résolution de problèmes.
-                </p>
-            </div>
-
-            <div class="home-card">
-                <h3>🌍 Adaptation</h3>
-                <p>
-                    Réponses adaptées au pays
-                    de l'utilisateur.
-                </p>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-   CONNEXION
-========================================================= -->
-
-<section
-    id="loginPage"
-    class="page hidden">
-
-    <div class="auth-container">
-
-        <div class="auth-box">
-
-            <h2>
-                Connexion
-            </h2>
-
-            <p>
-                Connecte-toi à ton compte NEXUS.
-            </p>
-
-
-            <form id="loginForm">
-
-                <div class="form-group">
-
-                    <label>
-                        Adresse e-mail
-                    </label>
-
-                    <input
-                        id="loginEmail"
-                        type="email"
-                        required
-                        placeholder="exemple@email.com">
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Mot de passe
-                    </label>
-
-                    <input
-                        id="loginPassword"
-                        type="password"
-                        required
-                        placeholder="Mot de passe">
-
-                </div>
-
-                <div id="loginError" class="form-error"></div>
-
-                <button
-                    type="submit"
-                    class="primary-button"
-                    style="width:100%;">
-                    Se connecter
-                </button>
-
-            </form>
-
-
-            <div class="auth-switch">
-
-                Pas encore de compte ?
-
-                <button
-                    type="button"
-                    id="goRegister"
-                    class="link-button">
-                    Créer un compte
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-   INSCRIPTION
-========================================================= -->
-
-<section
-    id="registerPage"
-    class="page hidden">
-
-    <div class="auth-container">
-
-        <div class="auth-box">
-
-            <h2>
-                Créer un compte
-            </h2>
-
-            <p>
-                Crée ton compte NEXUS.
-            </p>
-
-
-            <form id="registerForm">
-
-                <div class="form-group">
-
-                    <label>
-                        Nom
-                    </label>
-
-                    <input
-                        id="registerName"
-                        type="text"
-                        required
-                        placeholder="Ton nom">
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Adresse e-mail
-                    </label>
-
-                    <input
-                        id="registerEmail"
-                        type="email"
-                        required
-                        placeholder="exemple@email.com">
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Mot de passe
-                    </label>
-
-                    <input
-                        id="registerPassword"
-                        type="password"
-                        minlength="4"
-                        required
-                        placeholder="Mot de passe">
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Pays
-                    </label>
-
-                    <select
-                        id="registerCountry"
-                        required>
-
-                        <option value="">
-                            Choisir un pays
-                        </option>
-
-                        <option value="Gabon">
-                            🇬🇦 Gabon
-                        </option>
-
-                        <option value="Cameroun">
-                            🇨🇲 Cameroun
-                        </option>
-
-                        <option value="Congo">
-                            🇨🇬 Congo
-                        </option>
-
-                        <option value="Côte d'Ivoire">
-                            🇨🇮 Côte d'Ivoire
-                        </option>
-
-                        <option value="Sénégal">
-                            🇸🇳 Sénégal
-                        </option>
-
-                        <option value="France">
-                            🇫🇷 France
-                        </option>
-
-                        <option value="Autre">
-                            🌍 Autre
-                        </option>
-
-                    </select>
-
-                </div>
-
-                <div id="registerError" class="form-error"></div>
-
-                <button
-                    type="submit"
-                    class="primary-button"
-                    style="width:100%;">
-                    Créer mon compte
-                </button>
-
-            </form>
-
-
-            <div class="auth-switch">
-
-                Déjà un compte ?
-
-                <button
-                    type="button"
-                    id="goLogin"
-                    class="link-button">
-                    Se connecter
-                </button>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
-   DASHBOARD
-========================================================= -->
-
-<section
-    id="dashboardPage"
-    class="page hidden">
-
-    <div class="dashboard">
-
-        <div class="dashboard-title">
-
-            <h2 id="welcomeTitle">
-                Bienvenue sur NEXUS
-            </h2>
-
-            <p id="countryText">
-                Ton espace personnel.
-            </p>
-
-        </div>
-
-
-        <div class="direct-card">
-
-            <div>
-
-                <h3>
-                    💬 Conversation avec NEXUS
-                </h3>
-
-                <p>
-                    Pose une question ou demande
-                    de l'aide à NEXUS.
-                </p>
-
-            </div>
-
-
-            <button
-                type="button"
-                id="openChatButton"
-                class="primary-button"
-                style="margin-top:0;">
-                Ouvrir le chat
-            </button>
-
-        </div>
-
-
-        <div class="categories">
-
-            <div
-                class="category-card"
-                data-message="Aide-moi à résoudre un exercice de mathématiques.">
-
-                <h3>
-                    📐 Mathématiques
-                </h3>
-
-                <p>
-                    Équations, fonctions, géométrie
-                    et raisonnement.
-                </p>
-
-            </div>
-
-
-            <div
-                class="category-card"
-                data-message="Aide-moi à résoudre un exercice de physique.">
-
-                <h3>
-                    ⚡ Physique
-                </h3>
-
-                <p>
-                    Mécanique, électricité,
-             
+            <div id="result-container"></div>
+        </section>
+    </main>
+
+    <footer>
+        &copy; 2026 Nexus Project. Tous droits réservés.
+    </footer>
+
+    <script>
+        // Remplacez les plus par votre clé API
+        const API_KEY = "sk_BmAEWYalAvtU0h97xukfKG6UdWnuGeox"; 
+
+        async function resoudreProbleme() {
+            const problem = document.getElementById('problem-input').value.trim();
+            const resultContainer = document.getElementById('result-container');
+            const solveBtn = document.getElementById('solve-btn');
+
+            if (!problem) {
+                alert("Veuillez décrire un problème avant de lancer la résolution.");
+                return;
+            }
+
+            if (API_KEY.includes("+++") || API_KEY === "") {
+                alert("Veuillez insérer votre clé API valide dans le code source.");
+                return;
+            }
+
+            resultContainer.style.display = "block";
+            resultContainer.textContent = "Nexus analyse votre problème et élabore les étapes de résolution...";
+            solveBtn.disabled = true;
+
+            try {
+                const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-4o-mini",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "Tu es Nexus, une application experte en résolution de problèmes. Pour chaque problème soumis, fournis une analyse claire, structurée sous forme d'étapes concrètes et numérotées que l'utilisateur doit suivre pour tout résoudre."
+                            },
+                            {
+                                role: "user",
+                                content: problem
+                            }
+                        ],
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la communication avec l'API.");
+                }
+
+                const data = await response.json();
+                const solution = data.choices[0].message.content;
+                resultContainer.textContent = solution;
+
+            } catch (error) {
+                resultContainer.textContent = "Erreur : Impossible de joindre le service de résolution. Vérifiez votre clé API ou votre connexion.";
+                console.error(error);
+            } finally {
+                solveBtn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
