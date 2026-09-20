@@ -3,209 +3,310 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEXUS AI</title>
+
+<title>NEXUS — Assistant intelligent</title>
 
 <style>
-* {
-    box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #050816;
-    color: white;
+body{
+  margin:0;
+  background:#050814;
+  color:#fff;
+  font-family:Arial,sans-serif;
 }
 
-header {
-    height: 75px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 22px;
-    border-bottom: 1px solid #17233d;
-    position: sticky;
-    top: 0;
-    background: #050816;
-    z-index: 10;
+button,input,textarea{
+  font:inherit;
 }
 
-.logo {
-    font-size: 30px;
-    font-weight: 800;
-    letter-spacing: 2px;
+button{
+  cursor:pointer;
 }
 
-nav {
-    display: flex;
-    gap: 22px;
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:22px 7%;
+  border-bottom:1px solid #17233d;
+  position:sticky;
+  top:0;
+  background:#050814ee;
+  backdrop-filter:blur(12px);
+  z-index:5;
 }
 
-nav button {
-    background: none;
-    border: none;
-    color: #aeb8ca;
-    font-size: 17px;
-    cursor: pointer;
+.logo{
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:3px;
 }
 
-nav button:hover {
-    color: #28d8d1;
+.creator{
+  font-size:12px;
+  color:#8794aa;
 }
 
-main {
-    max-width: 700px;
-    margin: auto;
-    padding: 25px 20px 100px;
+nav button{
+  background:none;
+  border:0;
+  color:#aab5c7;
+  margin-left:14px;
 }
 
-.page {
-    display: none;
+main{
+  max-width:1050px;
+  margin:auto;
+  padding:30px 18px;
 }
 
-.page.active {
-    display: block;
+.hero{
+  padding:35px 25px;
+  border:1px solid #1c3154;
+  border-radius:28px;
+  background:linear-gradient(145deg,#0c1930,#08101f);
 }
 
-.hero {
-    background: linear-gradient(145deg, #101b35, #07101f);
-    border: 1px solid #1b3155;
-    border-radius: 28px;
-    padding: 35px 25px;
-    margin-bottom: 25px;
+.badge{
+  color:#29d6ca;
+  font-weight:700;
+  letter-spacing:2px;
 }
 
-.hero h1 {
-    font-size: 38px;
-    margin: 0 0 15px;
+.hero h1{
+  font-size:42px;
+  margin:12px 0;
 }
 
-.hero p {
-    color: #aeb8ca;
-    font-size: 19px;
-    line-height: 1.6;
+.hero p{
+  color:#9eabc0;
+  font-size:18px;
+  line-height:1.6;
 }
 
-.start {
-    background: #28d8d1;
-    border: none;
-    border-radius: 15px;
-    padding: 16px 22px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    color: #031013;
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:16px;
+  margin-top:20px;
 }
 
-.card {
-    background: #091426;
-    border: 1px solid #1b3155;
-    border-radius: 22px;
-    padding: 25px;
-    margin: 20px 0;
+.card{
+  background:#0b1425;
+  border:1px solid #1b2d4a;
+  border-radius:20px;
+  padding:20px;
 }
 
-.card h2 {
-    margin-top: 0;
+.feature{
+  cursor:pointer;
+  transition:.2s;
 }
 
-.card p {
-    color: #d1d7e2;
-    line-height: 1.6;
+.feature:hover{
+  transform:translateY(-2px);
+  border-color:#20cfc5;
 }
 
-.chat {
-    min-height: calc(100vh - 120px);
-    display: flex;
-    flex-direction: column;
+.card h3{
+  margin-top:0;
 }
 
-.chat-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 15px;
+.primary{
+  background:#20cfc5;
+  color:#041016;
+  border:0;
+  border-radius:12px;
+  padding:12px 18px;
+  font-weight:700;
 }
 
-.back {
-    background: #101b35;
-    color: white;
-    border: 1px solid #24395d;
-    border-radius: 10px;
-    padding: 10px 14px;
-    cursor: pointer;
+.secondary{
+  background:#16233a;
+  color:white;
+  border:1px solid #2a3c59;
+  border-radius:12px;
+  padding:12px 18px;
 }
 
-.chat-title {
-    font-size: 25px;
-    font-weight: bold;
+.panel{
+  display:none;
 }
 
-.messages {
-    flex: 1;
-    padding: 10px 0 20px;
-    overflow-y: auto;
+.panel.active{
+  display:block;
 }
 
-.message {
-    max-width: 85%;
-    padding: 14px 16px;
-    border-radius: 18px;
-    margin: 12px 0;
-    line-height: 1.5;
-    white-space: pre-wrap;
+.messages{
+  height:390px;
+  overflow:auto;
+  padding:14px;
+  background:#07101f;
+  border:1px solid #1b2d4a;
+  border-radius:18px;
 }
 
-.bot {
-    background: #101b35;
-    border: 1px solid #20365b;
-    margin-right: auto;
+.msg{
+  max-width:82%;
+  padding:13px 15px;
+  border-radius:15px;
+  margin:10px 0;
+  line-height:1.5;
+  white-space:pre-wrap;
 }
 
-.user {
-    background: #28d8d1;
-    color: #031013;
-    margin-left: auto;
+.bot{
+  background:#10213a;
 }
 
-.input-area {
-    position: sticky;
-    bottom: 0;
-    background: #050816;
-    padding: 12px 0;
-    display: flex;
-    gap: 10px;
+.user{
+  background:#146c79;
+  margin-left:auto;
 }
 
-.input-area input {
-    flex: 1;
-    min-width: 0;
-    background: #101827;
-    color: white;
-    border: 1px solid #293b5b;
-    border-radius: 16px;
-    padding: 16px;
-    font-size: 16px;
-    outline: none;
+.chatbar{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
 }
 
-.input-area input:focus {
-    border-color: #28d8d1;
+.chatbar textarea{
+  flex:1;
+  resize:none;
+  min-height:55px;
+  background:#0d1c2f;
+  color:white;
+  border:1px solid #28415f;
+  border-radius:14px;
+  padding:14px;
 }
 
-.send {
-    width: 55px;
-    border: none;
-    border-radius: 16px;
-    background: #28d8d1;
-    font-size: 22px;
-    cursor: pointer;
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:18px 0;
 }
 
-footer {
-    text-align: center;
-    color: #68758d;
-    padding: 35px 10px;
+.tabs button{
+  background:#101e33;
+  color:#cdd7e7;
+  border:1px solid #263a57;
+  border-radius:10px;
+  padding:10px 14px;
+}
+
+.list{
+  display:grid;
+  gap:10px;
+}
+
+.item{
+  background:#0b1425;
+  border:1px solid #1b2d4a;
+  border-radius:14px;
+  padding:15px;
+}
+
+input{
+  width:100%;
+  background:#0d1c2f;
+  color:#fff;
+  border:1px solid #28415f;
+  border-radius:12px;
+  padding:13px;
+  margin:6px 0 12px;
+}
+
+textarea{
+  color:white;
+}
+
+footer{
+  text-align:center;
+  color:#69778d;
+  padding:40px 15px;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:#000a;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:20;
+  padding:20px;
+}
+
+.modalbox{
+  width:min(430px,100%);
+  background:#0b1425;
+  border:1px solid #28415f;
+  border-radius:22px;
+  padding:25px;
+}
+
+.notice{
+  padding:12px;
+  border-radius:10px;
+  background:#10233a;
+  color:#9fb0c8;
+  margin:12px 0;
+  font-size:13px;
+}
+
+.adminTag{
+  color:#29d6ca;
+  font-weight:bold;
+}
+
+a{
+  color:#53d7ff;
+}
+
+.small{
+  color:#8794aa;
+  font-size:13px;
+}
+
+.error{
+  color:#ff8d8d;
+}
+
+.success{
+  color:#67e8d5;
+}
+
+@media(max-width:600px){
+
+  .hero h1{
+    font-size:32px;
+  }
+
+  header{
+    padding:17px 5%;
+  }
+
+  .creator{
+    display:none;
+  }
+
+  nav button{
+    margin-left:5px;
+    font-size:12px;
+  }
+
+  .chatbar{
+    flex-direction:column;
+  }
+
+  .chatbar button{
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -213,237 +314,1009 @@ footer {
 <body>
 
 <header>
-    <div class="logo">NEXUS</div>
 
-    <nav>
-        <button onclick="showPage('home')">Accueil</button>
-        <button onclick="showPage('chat')">NEXUS AI</button>
-    </nav>
+  <div>
+    <div class="logo">NEXUS</div>
+    <div class="creator">
+      Créé par Otoghe Nzé Aristide
+    </div>
+  </div>
+
+  <nav>
+    <button onclick="showPanel('home')">Accueil</button>
+    <button onclick="startConversation()">NEXUS AI</button>
+    <button onclick="openLogin()">Connexion</button>
+  </nav>
+
 </header>
+
 
 <main>
 
-    <!-- ACCUEIL -->
-    <section id="home" class="page active">
+<!-- ACCUEIL -->
 
-        <div class="hero">
-            <h1>Une idée en tête ?</h1>
+<section id="home" class="panel active">
 
-            <p>
-                Apprends, organise tes idées, résous tes problèmes
-                et développe tes projets avec NEXUS.
-            </p>
+  <div class="hero">
 
-            <button class="start" onclick="startChat()">
-                Commencer une conversation
-            </button>
-        </div>
+    <div class="badge">
+      ✦ NEXUS AI
+    </div>
 
-        <div class="card">
-            <h2>🤖 Assistant</h2>
-            <p>
-                Pose une question et échange directement avec NEXUS.
-            </p>
-        </div>
+    <h1>
+      Une idée en tête ?
+    </h1>
 
-        <div class="card">
-            <h2>💡 Bloc-notes</h2>
-            <p>
-                Enregistre tes idées directement dans NEXUS.
-            </p>
-        </div>
+    <p>
+      Apprends, organise tes idées, résous tes problèmes
+      et développe tes projets avec NEXUS.
+    </p>
 
-        <div class="card">
-            <h2>🛠️ Problèmes</h2>
-            <p>
-                Décris un problème et organise les informations utiles.
-            </p>
-        </div>
+    <button class="primary" onclick="startConversation()">
+      Commencer une conversation
+    </button>
 
-        <div class="card">
-            <h2>🎓 Éducateurs</h2>
-            <p>
-                Accède à un espace dédié à l'apprentissage et aux ressources.
-            </p>
-        </div>
-
-    </section>
+  </div>
 
 
-    <!-- CHAT -->
-    <section id="chat" class="page chat">
+  <div class="grid">
 
-        <div class="chat-header">
+    <div class="card feature" onclick="openFeature('assistant')">
+      <h3>🤖 Assistant</h3>
+      <p>
+        Pose une question et échange directement avec NEXUS.
+      </p>
+    </div>
 
-            <button class="back" onclick="showPage('home')">
-                ← Retour
-            </button>
+    <div class="card feature" onclick="openFeature('notes')">
+      <h3>💡 Bloc-notes</h3>
+      <p>
+        Enregistre tes idées directement dans NEXUS.
+      </p>
+    </div>
 
-            <div class="chat-title">
-                🤖 NEXUS AI
-            </div>
+    <div class="card feature" onclick="openFeature('problems')">
+      <h3>🛠️ Problèmes</h3>
+      <p>
+        Décris un problème et obtiens une aide structurée.
+      </p>
+    </div>
 
-        </div>
+    <div class="card feature" onclick="openFeature('educators')">
+      <h3>🎓 Éducateurs</h3>
+      <p>
+        Cours, révisions, exercices et explications avec NEXUS.
+      </p>
+    </div>
 
-        <div id="messages" class="messages">
+  </div>
 
-            <div class="message bot">
-                Bonjour 👋 Je suis NEXUS AI.
+</section>
 
-                Pose-moi une question ou explique-moi ce que tu veux faire. Je vais essayer de t'aider de manière claire et structurée.
-            </div>
 
-        </div>
+<!-- CHAT -->
 
-        <div class="input-area">
+<section id="chat" class="panel">
 
-            <input
-                id="userInput"
-                type="text"
-                placeholder="Écris ton message..."
-                autocomplete="off"
-            >
+  <div class="card">
 
-            <button class="send" onclick="sendMessage()">
-                ➤
-            </button>
+    <div class="badge">
+      NEXUS AI
+    </div>
 
-        </div>
+    <h2>
+      Assistant intelligent
+    </h2>
 
-    </section>
+    <div id="messages" class="messages">
+
+      <div class="msg bot">
+        Bonjour 👋 Je suis NEXUS AI.
+        Pose-moi une question pour commencer.
+      </div>
+
+    </div>
+
+
+    <div class="chatbar">
+
+      <textarea
+        id="prompt"
+        autocomplete="off"
+        inputmode="text"
+        placeholder="Écrivez votre message..."
+        onkeydown="handleChatKey(event)"
+      ></textarea>
+
+      <button
+        id="sendButton"
+        class="primary"
+        onclick="sendMessage()"
+      >
+        Envoyer
+      </button>
+
+    </div>
+
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
+
+      <button class="secondary" onclick="changeApiKey()">
+        ⚙️ Clé IA
+      </button>
+
+      <button class="secondary" onclick="clearChat()">
+        🗑️ Effacer la conversation
+      </button>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- EDUCATEURS -->
+
+<section id="educatorsPanel" class="panel">
+
+  <div class="hero">
+
+    <div class="badge">
+      🎓 ÉDUCATEURS
+    </div>
+
+    <h1>
+      Apprendre avec NEXUS
+    </h1>
+
+    <p>
+      Demande une explication de cours, un résumé,
+      une fiche de révision ou des exercices adaptés à ton niveau.
+    </p>
+
+    <button class="primary" onclick="askEducator()">
+      Demander une aide éducative
+    </button>
+
+  </div>
+
+
+  <div class="grid">
+
+    <div class="card">
+      <h3>📚 Comprendre un cours</h3>
+      <p>
+        NEXUS explique un chapitre étape par étape.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>📝 Révision</h3>
+      <p>
+        Crée une fiche de révision claire et structurée.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>✏️ Exercices</h3>
+      <p>
+        Demande des exercices avec corrections détaillées.
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>🎯 Niveau personnalisé</h3>
+      <p>
+        Indique ta classe et NEXUS adapte ses explications.
+      </p>
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- NOTES -->
+
+<section id="notesPanel" class="panel">
+
+  <div class="hero">
+
+    <div class="badge">
+      💡 BLOC-NOTES
+    </div>
+
+    <h1>
+      Tes idées
+    </h1>
+
+    <p>
+      Enregistre une idée directement dans NEXUS.
+    </p>
+
+    <input
+      id="publicIdeaInput"
+      placeholder="Écris ton idée..."
+    >
+
+    <button class="primary" onclick="savePublicIdea()">
+      Enregistrer
+    </button>
+
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Mes idées enregistrées
+    </h3>
+
+    <div id="publicIdeaList" class="list"></div>
+
+  </div>
+
+</section>
+
+
+<!-- PROBLEMES -->
+
+<section id="problemsPanel" class="panel">
+
+  <div class="hero">
+
+    <div class="badge">
+      🛠️ PROBLÈMES
+    </div>
+
+    <h1>
+      Résoudre un problème
+    </h1>
+
+    <p>
+      Décris ton problème et NEXUS t'aide à l'analyser
+      et à trouver des pistes de solution.
+    </p>
+
+    <textarea
+      id="problemPrompt"
+      style="width:100%;min-height:120px;background:#0d1c2f;color:white;border:1px solid #28415f;border-radius:14px;padding:14px"
+      placeholder="Décris ton problème..."
+    ></textarea>
+
+    <br><br>
+
+    <button class="primary" onclick="solveProblem()">
+      Analyser avec NEXUS AI
+    </button>
+
+  </div>
+
+</section>
+
+
+<!-- ADMIN -->
+
+<section id="dashboard" class="panel">
+
+  <div class="hero">
+
+    <div class="adminTag">
+      ● MODE ADMINISTRATEUR
+    </div>
+
+    <h1>
+      Tableau de bord
+    </h1>
+
+    <p>
+      Bienvenue dans l’espace privé de NEXUS.
+    </p>
+
+  </div>
+
+
+  <div class="tabs">
+
+    <button onclick="adminTab('ideas')">
+      💡 Idées
+    </button>
+
+    <button onclick="adminTab('problems')">
+      🛠️ Problèmes
+    </button>
+
+    <button onclick="adminTab('educators')">
+      🎓 Éducateurs
+    </button>
+
+    <button onclick="adminTab('users')">
+      👥 Utilisateurs
+    </button>
+
+  </div>
+
+
+  <div id="ideas" class="admincontent">
+
+    <div class="card">
+
+      <h3>
+        Bloc-notes des idées
+      </h3>
+
+      <input
+        id="ideaInput"
+        placeholder="Nouvelle idée..."
+      >
+
+      <button class="primary" onclick="addIdea()">
+        Ajouter
+      </button>
+
+      <div
+        id="ideaList"
+        class="list"
+        style="margin-top:15px"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <div id="problems" class="admincontent" style="display:none">
+
+    <div class="card">
+
+      <h3>
+        Explication des problèmes + liens
+      </h3>
+
+      <input
+        id="problemTitle"
+        placeholder="Titre du problème"
+      >
+
+      <input
+        id="problemLink"
+        placeholder="Lien utile (https://...)"
+      >
+
+      <button class="primary" onclick="addProblem()">
+        Ajouter
+      </button>
+
+      <div
+        id="problemList"
+        class="list"
+        style="margin-top:15px"
+      ></div>
+
+    </div>
+
+  </div>
+
+
+  <div id="educators" class="admincontent" style="display:none">
+
+    <div class="card">
+
+      <h3>
+        Visibilité pour les éducateurs
+      </h3>
+
+      <p>
+        Ajoute ici des ressources, cours, consignes
+        et annonces destinés aux éducateurs.
+      </p>
+
+      <textarea
+        id="eduText"
+        style="width:100%;min-height:120px;background:#0d1c2f;color:white;border:1px solid #28415f;border-radius:12px;padding:13px"
+        placeholder="Contenu éducateur..."
+      ></textarea>
+
+      <br><br>
+
+      <button class="primary" onclick="saveEdu()">
+        Enregistrer
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div id="users" class="admincontent" style="display:none">
+
+    <div class="card">
+
+      <h3>
+        Utilisateurs
+      </h3>
+
+      <p>
+        Cette version est une démonstration côté navigateur.
+        Une vraie gestion des comptes devra être déplacée vers
+        un serveur sécurisé.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
 
 </main>
 
+
 <footer>
-    NEXUS — Créé par Otoghe Nzé Aristide
+  NEXUS — Créé par Otoghe Nzé Aristide
 </footer>
+
+
+<!-- MODAL CLE API -->
+
+<div id="apiModal" class="modal">
+
+  <div class="modalbox">
+
+    <div class="badge">
+      NEXUS AI
+    </div>
+
+    <h2>
+      Activer l'intelligence artificielle
+    </h2>
+
+    <p>
+      Entre ta clé Pollinations pour permettre
+      à NEXUS de communiquer avec le modèle IA.
+    </p>
+
+    <input
+      id="apiKeyInput"
+      type="password"
+      placeholder="sk_..."
+    >
+
+    <button
+      class="primary"
+      style="width:100%;margin-bottom:10px"
+      onclick="saveApiKey()"
+    >
+      Activer NEXUS AI
+    </button>
+
+    <button
+      class="secondary"
+      style="width:100%"
+      onclick="closeApiModal()"
+    >
+      Annuler
+    </button>
+
+    <div class="notice">
+      Pour cette version de test, la clé est conservée
+      dans le stockage local du navigateur.
+      Ne mets jamais une clé secrète directement dans
+      le code public GitHub.
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- CHOIX CONNEXION -->
+
+<div id="authChoice" class="modal">
+
+  <div class="modalbox">
+
+    <div class="badge">
+      NEXUS
+    </div>
+
+    <h2>
+      Accéder à NEXUS AI
+    </h2>
+
+    <p>
+      Connecte-toi ou crée un compte pour commencer.
+    </p>
+
+    <button
+      class="primary"
+      style="width:100%;margin-bottom:10px"
+      onclick="openLoginFromChoice()"
+    >
+      Se connecter
+    </button>
+
+    <button
+      class="secondary"
+      style="width:100%"
+      onclick="openRegister()"
+    >
+      Créer un compte
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- INSCRIPTION -->
+
+<div id="registerModal" class="modal">
+
+  <div class="modalbox">
+
+    <div class="badge">
+      NEXUS
+    </div>
+
+    <h2>
+      Créer un compte
+    </h2>
+
+    <input
+      id="registerName"
+      placeholder="Nom ou prénom"
+    >
+
+    <input
+      id="registerEmail"
+      type="email"
+      placeholder="Adresse e-mail"
+    >
+
+    <input
+      id="registerPassword"
+      type="password"
+      placeholder="Mot de passe"
+    >
+
+    <button
+      class="primary"
+      onclick="register()"
+    >
+      Créer mon compte
+    </button>
+
+    <button
+      class="secondary"
+      onclick="closeRegister()"
+    >
+      Annuler
+    </button>
+
+    <p class="small">
+      Déjà un compte ?
+      <a href="#" onclick="openLoginFromRegister();return false">
+        Se connecter
+      </a>
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- CONNEXION -->
+
+<div id="modal" class="modal">
+
+  <div class="modalbox">
+
+    <div class="badge">
+      NEXUS
+    </div>
+
+    <h2>
+      Connexion NEXUS
+    </h2>
+
+    <p>
+      Entre ton adresse e-mail.
+    </p>
+
+    <input
+      id="email"
+      type="email"
+      placeholder="ton@email.com"
+    >
+
+    <button
+      class="primary"
+      onclick="login()"
+    >
+      Se connecter
+    </button>
+
+    <button
+      class="secondary"
+      onclick="closeLogin()"
+    >
+      Annuler
+    </button>
+
+    <div class="notice">
+      ⚠️ Cette version est un prototype.
+      La sécurité réelle des comptes nécessitera
+      une authentification côté serveur.
+    </div>
+
+  </div>
+
+</div>
 
 
 <script>
 
-function showPage(page) {
+/* =====================================================
+   CONFIGURATION
+===================================================== */
 
-    document.querySelectorAll(".page").forEach(function(element) {
-        element.classList.remove("active");
+const ADMIN_EMAIL = "admin@nexus.app";
+
+const API_URL =
+  "https://gen.pollinations.ai/v1/chat/completions";
+
+/*
+  Modèle utilisé pour le prototype.
+  Tu peux le modifier plus tard si nécessaire.
+*/
+const AI_MODEL = "openai/gpt-5.4-nano";
+
+
+/* =====================================================
+   HISTORIQUE IA
+===================================================== */
+
+const SYSTEM_MESSAGE = {
+  role:"system",
+  content:
+`Tu es NEXUS AI, l'assistant intelligent de l'application NEXUS,
+créée par Otoghe Nzé Aristide.
+
+Tu réponds en français de façon naturelle, claire, précise et utile.
+
+Tu peux aider pour :
+- les cours
+- les révisions
+- les mathématiques
+- la physique
+- la SVT
+- la programmation
+- les projets
+- l'organisation des idées
+- les problèmes du quotidien
+
+Pour l'éducation, explique étape par étape
+et adapte le niveau demandé.
+
+Ne prétends jamais avoir accès à une information
+que tu n'as pas.`
+};
+
+let chatHistory = [SYSTEM_MESSAGE];
+
+
+/* =====================================================
+   NAVIGATION
+===================================================== */
+
+function showPanel(id){
+
+  document
+    .querySelectorAll(".panel")
+    .forEach(function(panel){
+      panel.classList.remove("active");
     });
 
-    document.getElementById(page).classList.add("active");
+  const element = document.getElementById(id);
 
-    window.scrollTo(0, 0);
+  if(element){
+    element.classList.add("active");
+  }
 
-    if (page === "chat") {
-        setTimeout(function() {
-            document.getElementById("userInput").focus();
-        }, 100);
-    }
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
 }
 
 
-function startChat() {
+function startConversation(){
 
-    showPage("chat");
+  showPanel("chat");
 
-    setTimeout(function() {
-        document.getElementById("userInput").focus();
-    }, 150);
+  setTimeout(function(){
+
+    const prompt =
+      document.getElementById("prompt");
+
+    if(prompt){
+      prompt.focus();
+    }
+
+  },100);
 }
 
 
-function addMessage(text, type) {
+function openFeature(type){
 
-    const messages = document.getElementById("messages");
+  if(type === "assistant"){
+    startConversation();
+  }
 
-    const message = document.createElement("div");
+  if(type === "notes"){
+    showPanel("notesPanel");
+    renderPublicIdeas();
+  }
 
-    message.className = "message " + type;
+  if(type === "problems"){
+    showPanel("problemsPanel");
+  }
 
-    message.textContent = text;
-
-    messages.appendChild(message);
-
-    messages.scrollTop = messages.scrollHeight;
+  if(type === "educators"){
+    showPanel("educatorsPanel");
+  }
 }
 
 
-function generateResponse(question) {
+/* =====================================================
+   EDUCATION
+===================================================== */
 
-    const q = question.toLowerCase();
+function askEducator(){
 
-    if (q.includes("bonjour") ||
-        q.includes("salut") ||
-        q.includes("hello")) {
+  showPanel("chat");
 
-        return "Bonjour 👋 Ravi de discuter avec toi. Que veux-tu faire aujourd'hui ?";
-    }
+  setTimeout(function(){
 
-    if (q.includes("qui es-tu") ||
-        q.includes("qui est nexus")) {
+    const prompt =
+      document.getElementById("prompt");
 
-        return "Je suis NEXUS AI, un assistant conçu pour aider à apprendre, organiser des idées, résoudre des problèmes et développer des projets.";
-    }
+    prompt.value =
+`Je veux une aide éducative.
 
-    if (q.includes("math")) {
+Mon niveau est Première S.
 
-        return "Bien sûr 📐. Envoie-moi ton exercice de mathématiques et je peux t'aider à le résoudre étape par étape.";
-    }
+Explique-moi un cours étape par étape,
+puis propose quelques exercices avec leurs corrections.`;
 
-    if (q.includes("physique")) {
+    prompt.focus();
 
-        return "D'accord ⚡. Envoie ton exercice ou ton cours de physique et nous pouvons travailler dessus étape par étape.";
-    }
-
-    if (q.includes("projet") ||
-        q.includes("application")) {
-
-        return "Très bien 🚀. Décris ton projet et je peux t'aider à définir les fonctionnalités, l'interface et les prochaines étapes.";
-    }
-
-    if (q.includes("aide") ||
-        q.includes("problème")) {
-
-        return "Bien sûr. Explique-moi précisément ton problème et nous allons le décomposer étape par étape.";
-    }
-
-    return "J'ai bien reçu ton message. Pour le moment, cette version de NEXUS fonctionne avec un moteur de réponse local. La prochaine étape sera de connecter une véritable IA afin d'obtenir des réponses beaucoup plus avancées.";
+  },100);
 }
 
 
-function sendMessage() {
+/* =====================================================
+   API
+===================================================== */
 
-    const input = document.getElementById("userInput");
+function getApiKey(){
 
-    const text = input.value.trim();
-
-    if (text === "") {
-        return;
-    }
-
-    addMessage(text, "user");
-
-    input.value = "";
-
-    setTimeout(function() {
-
-        const response = generateResponse(text);
-
-        addMessage(response, "bot");
-
-    }, 500);
+  return localStorage.getItem(
+    "nexus_pollinations_key"
+  ) || "";
 }
 
 
-document.getElementById("userInput").addEventListener("keydown", function(event) {
+function openApiModal(){
 
-    if (event.key === "Enter") {
+  document.getElementById(
+    "apiModal"
+  ).style.display = "flex";
 
-        event.preventDefault();
+  document.getElementById(
+    "apiKeyInput"
+  ).value = getApiKey();
 
-        sendMessage();
+  setTimeout(function(){
+
+    document
+      .getElementById("apiKeyInput")
+      .focus();
+
+  },100);
+}
+
+
+function closeApiModal(){
+
+  document.getElementById(
+    "apiModal"
+  ).style.display = "none";
+}
+
+
+function saveApiKey(){
+
+  const key =
+    document
+      .getElementById("apiKeyInput")
+      .value
+      .trim();
+
+  if(!key){
+
+    alert(
+      "Entre une clé API Pollinations."
+    );
+
+    return;
+  }
+
+  localStorage.setItem(
+    "nexus_pollinations_key",
+    key
+  );
+
+  closeApiModal();
+
+  addAI(
+    "✅ NEXUS AI est activé. Pose-moi ta question."
+  );
+}
+
+
+function changeApiKey(){
+
+  openApiModal();
+}
+
+
+/* =====================================================
+   ENVOI MESSAGE
+===================================================== */
+
+async function sendMessage(){
+
+  const input =
+    document.getElementById("prompt");
+
+  const text =
+    input.value.trim();
+
+  if(!text){
+    return;
+  }
+
+
+  const key = getApiKey();
+
+
+  if(!key){
+
+    openApiModal();
+
+    return;
+  }
+
+
+  const box =
+    document.getElementById("messages");
+
+  const sendButton =
+    document.getElementById("sendButton");
+
+
+  addMessage(
+    text,
+    "user"
+  );
+
+
+  input.value = "";
+  input.disabled = true;
+
+  if(sendButton){
+    sendButton.disabled = true;
+    sendButton.textContent = "Envoi...";
+  }
+
+
+  const loading =
+    document.createElement("div");
+
+  loading.className = "msg bot";
+  loading.id = "nexusLoading";
+
+  loading.textContent =
+    "NEXUS réfléchit…";
+
+  box.appendChild(loading);
+
+  box.scrollTop =
+    box.scrollHeight;
+
+
+  chatHistory.push({
+    role:"user",
+    content:text
+  });
+
+
+  try{
+
+    const response =
+      await fetch(
+        API_URL,
+        {
+          method:"POST",
+
+          headers:{
+            "Content-Type":
+              "application/json",
+
+            "Authorization":
+              "Bearer " + key
+          },
+
+          body:JSON.stringify({
+
+            model:AI_MODEL,
+
+            messages:chatHistory,
+
+            temperature:0.7
+          })
+        }
+      );
+
+
+    if(!response.ok){
+
+      const errorText =
+        await response.text();
+
+      throw new Error(
+        "Erreur API " +
+        response.status +
+        " : " +
+        errorText.slice(0,500)
+      );
     }
 
-});
 
-</script>
+    const data =
+      await response.json();
 
-</body>
-</html>
+
+    const answer =
+      data &&
+      data.choices &&
+      data.choices[0] &&
+      data.choices[0].message &&
+      data.choices[0].message.content;
+
+
+    if(!answer){
+
+      throw new Error(
+        "La réponse de l'IA est vide."
+      );
+    }
+
+
+    chatHistory.push({
+      role:"assistant",
+      content:answer
+    });
+
+
+    if(loading){
+      loading.remove();
+    }
+
+
+    addAI(answer);
+
+
+  }catch(error
