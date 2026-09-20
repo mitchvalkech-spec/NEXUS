@@ -1,168 +1,449 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEXUS AI</title>
 
 <style>
-*{box-sizing:border-box}
-
-body{
-margin:0;
-background:#030712;
-color:#f5f7fb;
-font-family:Arial,sans-serif
+* {
+    box-sizing: border-box;
 }
 
-header{
-background:#050817;
-border-bottom:1px solid #1a2940;
-position:sticky;
-top:0;
-z-index:2
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #050816;
+    color: white;
 }
 
-.nav{
-max-width:900px;
-margin:auto;
-padding:16px;
-display:flex;
-align-items:center;
-gap:8px
+header {
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 22px;
+    border-bottom: 1px solid #17233d;
+    position: sticky;
+    top: 0;
+    background: #050816;
+    z-index: 10;
 }
 
-.logo{
-font-size:30px;
-font-weight:800;
-letter-spacing:3px;
-margin-right:auto
+.logo {
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
-.nav button{
-background:none;
-border:0;
-color:#b9c2d2;
-font-size:16px;
-padding:9px
+nav {
+    display: flex;
+    gap: 22px;
 }
 
-.nav button:hover{
-color:#fff
+nav button {
+    background: none;
+    border: none;
+    color: #aeb8ca;
+    font-size: 17px;
+    cursor: pointer;
 }
 
-main{
-max-width:900px;
-margin:auto;
-padding:22px 16px 80px
+nav button:hover {
+    color: #28d8d1;
 }
 
-.hero,.panel,.card{
-background:#081423;
-border:1px solid #1b3150;
-border-radius:24px
+main {
+    max-width: 700px;
+    margin: auto;
+    padding: 25px 20px 100px;
 }
 
-.hero{
-padding:30px 22px
+.page {
+    display: none;
 }
 
-.badge{
-color:#2bd4cd;
-font-weight:700
+.page.active {
+    display: block;
 }
 
-.hero h1{
-font-size:40px;
-margin:14px 0
+.hero {
+    background: linear-gradient(145deg, #101b35, #07101f);
+    border: 1px solid #1b3155;
+    border-radius: 28px;
+    padding: 35px 25px;
+    margin-bottom: 25px;
 }
 
-.hero p{
-color:#aeb8ca;
-font-size:18px;
-line-height:1.6
+.hero h1 {
+    font-size: 38px;
+    margin: 0 0 15px;
 }
 
-.primary{
-background:#27d0c9;
-color:#031016;
-border:0;
-border-radius:13px;
-padding:14px 20px;
-font-weight:800;
-font-size:16px
+.hero p {
+    color: #aeb8ca;
+    font-size: 19px;
+    line-height: 1.6;
 }
 
-.cards{
-display:grid;
-gap:14px;
-margin-top:16px
+.start {
+    background: #28d8d1;
+    border: none;
+    border-radius: 15px;
+    padding: 16px 22px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    color: #031013;
 }
 
-.card{
-padding:20px
+.card {
+    background: #091426;
+    border: 1px solid #1b3155;
+    border-radius: 22px;
+    padding: 25px;
+    margin: 20px 0;
 }
 
-.card p{
-color:#aeb8ca;
-line-height:1.5
+.card h2 {
+    margin-top: 0;
 }
 
-.auth,.chat{
-max-width:650px;
-margin:auto
+.card p {
+    color: #d1d7e2;
+    line-height: 1.6;
 }
 
-.panel{
-padding:22px
+.chat {
+    min-height: calc(100vh - 120px);
+    display: flex;
+    flex-direction: column;
 }
 
-.panel input,
-.composer textarea{
-width:100%;
-background:#0c1a2b;
-color:#fff;
-border:1px solid #29415f;
-border-radius:12px;
-padding:14px;
-font-size:16px;
-outline:none
+.chat-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
 }
 
-.panel label{
-display:block;
-margin:15px 0 7px;
-color:#b8c2d2
+.back {
+    background: #101b35;
+    color: white;
+    border: 1px solid #24395d;
+    border-radius: 10px;
+    padding: 10px 14px;
+    cursor: pointer;
 }
 
-.formbtn{
-width:100%;
-margin-top:18px
+.chat-title {
+    font-size: 25px;
+    font-weight: bold;
 }
 
-.switch{
-background:none;
-border:0;
-color:#2bd4cd;
-margin-top:14px
+.messages {
+    flex: 1;
+    padding: 10px 0 20px;
+    overflow-y: auto;
 }
 
-.notice{
-margin-top:12px;
-background:#132238;
-padding:10px;
-border-radius:10px
+.message {
+    max-width: 85%;
+    padding: 14px 16px;
+    border-radius: 18px;
+    margin: 12px 0;
+    line-height: 1.5;
+    white-space: pre-wrap;
 }
 
-.chat{
-height:calc(100vh - 100px);
-display:flex;
-flex-direction:column
+.bot {
+    background: #101b35;
+    border: 1px solid #20365b;
+    margin-right: auto;
 }
 
-.chathead{
-padding:8px 2px 12px
+.user {
+    background: #28d8d1;
+    color: #031013;
+    margin-left: auto;
 }
 
-.chathead h2{
-margin:0 
+.input-area {
+    position: sticky;
+    bottom: 0;
+    background: #050816;
+    padding: 12px 0;
+    display: flex;
+    gap: 10px;
+}
+
+.input-area input {
+    flex: 1;
+    min-width: 0;
+    background: #101827;
+    color: white;
+    border: 1px solid #293b5b;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 16px;
+    outline: none;
+}
+
+.input-area input:focus {
+    border-color: #28d8d1;
+}
+
+.send {
+    width: 55px;
+    border: none;
+    border-radius: 16px;
+    background: #28d8d1;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+footer {
+    text-align: center;
+    color: #68758d;
+    padding: 35px 10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">NEXUS</div>
+
+    <nav>
+        <button onclick="showPage('home')">Accueil</button>
+        <button onclick="showPage('chat')">NEXUS AI</button>
+    </nav>
+</header>
+
+<main>
+
+    <!-- ACCUEIL -->
+    <section id="home" class="page active">
+
+        <div class="hero">
+            <h1>Une idée en tête ?</h1>
+
+            <p>
+                Apprends, organise tes idées, résous tes problèmes
+                et développe tes projets avec NEXUS.
+            </p>
+
+            <button class="start" onclick="startChat()">
+                Commencer une conversation
+            </button>
+        </div>
+
+        <div class="card">
+            <h2>🤖 Assistant</h2>
+            <p>
+                Pose une question et échange directement avec NEXUS.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>💡 Bloc-notes</h2>
+            <p>
+                Enregistre tes idées directement dans NEXUS.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>🛠️ Problèmes</h2>
+            <p>
+                Décris un problème et organise les informations utiles.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>🎓 Éducateurs</h2>
+            <p>
+                Accède à un espace dédié à l'apprentissage et aux ressources.
+            </p>
+        </div>
+
+    </section>
+
+
+    <!-- CHAT -->
+    <section id="chat" class="page chat">
+
+        <div class="chat-header">
+
+            <button class="back" onclick="showPage('home')">
+                ← Retour
+            </button>
+
+            <div class="chat-title">
+                🤖 NEXUS AI
+            </div>
+
+        </div>
+
+        <div id="messages" class="messages">
+
+            <div class="message bot">
+                Bonjour 👋 Je suis NEXUS AI.
+
+                Pose-moi une question ou explique-moi ce que tu veux faire. Je vais essayer de t'aider de manière claire et structurée.
+            </div>
+
+        </div>
+
+        <div class="input-area">
+
+            <input
+                id="userInput"
+                type="text"
+                placeholder="Écris ton message..."
+                autocomplete="off"
+            >
+
+            <button class="send" onclick="sendMessage()">
+                ➤
+            </button>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    NEXUS — Créé par Otoghe Nzé Aristide
+</footer>
+
+
+<script>
+
+function showPage(page) {
+
+    document.querySelectorAll(".page").forEach(function(element) {
+        element.classList.remove("active");
+    });
+
+    document.getElementById(page).classList.add("active");
+
+    window.scrollTo(0, 0);
+
+    if (page === "chat") {
+        setTimeout(function() {
+            document.getElementById("userInput").focus();
+        }, 100);
+    }
+}
+
+
+function startChat() {
+
+    showPage("chat");
+
+    setTimeout(function() {
+        document.getElementById("userInput").focus();
+    }, 150);
+}
+
+
+function addMessage(text, type) {
+
+    const messages = document.getElementById("messages");
+
+    const message = document.createElement("div");
+
+    message.className = "message " + type;
+
+    message.textContent = text;
+
+    messages.appendChild(message);
+
+    messages.scrollTop = messages.scrollHeight;
+}
+
+
+function generateResponse(question) {
+
+    const q = question.toLowerCase();
+
+    if (q.includes("bonjour") ||
+        q.includes("salut") ||
+        q.includes("hello")) {
+
+        return "Bonjour 👋 Ravi de discuter avec toi. Que veux-tu faire aujourd'hui ?";
+    }
+
+    if (q.includes("qui es-tu") ||
+        q.includes("qui est nexus")) {
+
+        return "Je suis NEXUS AI, un assistant conçu pour aider à apprendre, organiser des idées, résoudre des problèmes et développer des projets.";
+    }
+
+    if (q.includes("math")) {
+
+        return "Bien sûr 📐. Envoie-moi ton exercice de mathématiques et je peux t'aider à le résoudre étape par étape.";
+    }
+
+    if (q.includes("physique")) {
+
+        return "D'accord ⚡. Envoie ton exercice ou ton cours de physique et nous pouvons travailler dessus étape par étape.";
+    }
+
+    if (q.includes("projet") ||
+        q.includes("application")) {
+
+        return "Très bien 🚀. Décris ton projet et je peux t'aider à définir les fonctionnalités, l'interface et les prochaines étapes.";
+    }
+
+    if (q.includes("aide") ||
+        q.includes("problème")) {
+
+        return "Bien sûr. Explique-moi précisément ton problème et nous allons le décomposer étape par étape.";
+    }
+
+    return "J'ai bien reçu ton message. Pour le moment, cette version de NEXUS fonctionne avec un moteur de réponse local. La prochaine étape sera de connecter une véritable IA afin d'obtenir des réponses beaucoup plus avancées.";
+}
+
+
+function sendMessage() {
+
+    const input = document.getElementById("userInput");
+
+    const text = input.value.trim();
+
+    if (text === "") {
+        return;
+    }
+
+    addMessage(text, "user");
+
+    input.value = "";
+
+    setTimeout(function() {
+
+        const response = generateResponse(text);
+
+        addMessage(response, "bot");
+
+    }, 500);
+}
+
+
+document.getElementById("userInput").addEventListener("keydown", function(event) {
+
+    if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        sendMessage();
+    }
+
+});
+
+</script>
+
+</body>
+</html>
