@@ -1,936 +1,1034 @@
-<script>
-    const ADMIN_EMAIL = "aristideotoghe@gmail.com";
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXUS</title>
 
-    /*
-     * Garde ta clé API comme tu l'as actuellement configurée.
-     * Je ne modifie pas cette partie dans cette correction.
-     */
-    const POLLINATIONS_API_KEY = "sk_BmAEWYalAvtU0h97xukfKG6UdWnuGeox";
-
-    let utilisateurActif = null;
-    let categorieCourante = "Conversation directe";
-
-    // Historique de la conversation actuelle
-    let historiqueConversation = [];
-
-    const SYSTEM_PROMPT = `
-Tu es NEXUS, une intelligence artificielle conçue pour aider les utilisateurs
-à comprendre leurs problèmes et à trouver des solutions.
-
-Ton créateur est Otoghe nzé Aristide.
-
-Si on te demande qui t’a créé, réponds :
-"J'ai été créé par Otoghe nzé Aristide."
-
-Ne prétends pas avoir été créé par OpenAI.
-
-Tu aides dans :
-- les mathématiques
-- la physique-chimie
-- les sciences
-- les études
-- les projets
-- l’entrepreneuriat
-- les entreprises
-- la programmation
-- la technologie
-- l’écriture
-- la communication
-- l’organisation
-- les problèmes de la vie quotidienne
-
-Méthode :
-1. Comprendre la demande.
-2. Analyser le problème.
-3. Proposer une solution.
-4. Expliquer clairement.
-5. Donner des étapes concrètes lorsque c'est nécessaire.
-
-Pour les exercices scolaires, explique le raisonnement étape par étape
-et ne donne pas uniquement le résultat final.
-
-Lorsque le pays de l'utilisateur est fourni, tiens-en compte lorsque
-le contexte local est pertinent.
-
-Si une information manque ou si la demande est ambiguë, demande une
-précision au lieu d'inventer.
-
-Sois clair, utile, respectueux et encourageant.
-`;
-
-
-// ======================================================
-// INITIALISATION
-// ======================================================
-
-window.onload = function () {
-
-    const sessionEmail =
-        localStorage.getItem("nexus_session_email");
-
-    if (sessionEmail) {
-
-        const utilisateurs =
-            JSON.parse(
-                localStorage.getItem("nexus_users_db") || "[]"
-            );
-
-        const trouve =
-            utilisateurs.find(
-                u => u.email === sessionEmail
-            );
-
-        if (trouve) {
-
-            utilisateurActif = trouve;
-
-            chargerInterfaceApp();
-        }
-    }
-
-    // Permet d'envoyer avec Ctrl + Entrée
-    const chatInput =
-        document.getElementById("chat-input");
-
-    if (chatInput) {
-
-        chatInput.addEventListener("keydown", function (event) {
-
-            if (event.key === "Enter" && event.ctrlKey) {
-
-                event.preventDefault();
-
-                envoyerMessage();
-            }
-        });
-    }
-};
-
-
-// ======================================================
-// AUTHENTIFICATION
-// ======================================================
-
-function basculerAuth(mode) {
-
-    const login =
-        document.getElementById("login-form-container");
-
-    const register =
-        document.getElementById("register-form-container");
-
-    if (mode === "register") {
-
-        login.style.display = "none";
-        register.style.display = "block";
-
-    } else {
-
-        register.style.display = "none";
-        login.style.display = "block";
-    }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
 }
 
-
-// ======================================================
-// INSCRIPTION
-// ======================================================
-
-function gererInscription() {
-
-    const nom =
-        document.getElementById("reg-name").value.trim();
-
-    const email =
-        document.getElementById("reg-email")
-        .value.trim()
-        .toLowerCase();
-
-    const pays =
-        document.getElementById("reg-country")
-        .value.trim();
-
-    const password =
-        document.getElementById("reg-password").value;
-
-    const confirm =
-        document.getElementById("reg-confirm").value;
-
-
-    if (!nom || !email || !pays || !password || !confirm) {
-
-        alert("Veuillez remplir tous les champs.");
-
-        return;
-    }
-
-
-    if (password !== confirm) {
-
-        alert("Les mots de passe ne correspondent pas.");
-
-        return;
-    }
-
-
-    let utilisateurs =
-        JSON.parse(
-            localStorage.getItem("nexus_users_db") || "[]"
-        );
-
-
-    if (utilisateurs.some(u => u.email === email)) {
-
-        alert("Cet e-mail est déjà associé à un compte.");
-
-        return;
-    }
-
-
-    const nouvelUtilisateur = {
-
-        nom: nom,
-        email: email,
-        pays: pays,
-        password: password,
-
-        role:
-            email === ADMIN_EMAIL
-                ? "Admin"
-                : "Utilisateur"
-    };
-
-
-    utilisateurs.push(nouvelUtilisateur);
-
-
-    localStorage.setItem(
-        "nexus_users_db",
-        JSON.stringify(utilisateurs)
-    );
-
-
-    alert("Inscription réussie ! Vous pouvez vous connecter.");
-
-    // Nettoyage des champs
-    document.getElementById("reg-name").value = "";
-    document.getElementById("reg-email").value = "";
-    document.getElementById("reg-country").value = "";
-    document.getElementById("reg-password").value = "";
-    document.getElementById("reg-confirm").value = "";
-
-    basculerAuth("login");
+body {
+    background: #080b12;
+    color: white;
+    min-height: 100vh;
 }
 
-
-// ======================================================
-// CONNEXION
-// ======================================================
-
-function gererConnexion() {
-
-    const email =
-        document.getElementById("login-email")
-        .value.trim()
-        .toLowerCase();
-
-    const password =
-        document.getElementById("login-password").value;
-
-
-    if (!email || !password) {
-
-        alert("Veuillez remplir tous les champs.");
-
-        return;
-    }
-
-
-    const utilisateurs =
-        JSON.parse(
-            localStorage.getItem("nexus_users_db") || "[]"
-        );
-
-
-    const utilisateur =
-        utilisateurs.find(
-            u =>
-                u.email === email &&
-                u.password === password
-        );
-
-
-    if (!utilisateur) {
-
-        alert("E-mail ou mot de passe incorrect.");
-
-        return;
-    }
-
-
-    utilisateurActif = utilisateur;
-
-
-    localStorage.setItem(
-        "nexus_session_email",
-        utilisateur.email
-    );
-
-
-    // Nouvelle conversation à la connexion
-    historiqueConversation = [];
-
-
-    chargerInterfaceApp();
+button,
+input,
+select,
+textarea {
+    font: inherit;
 }
 
+button {
+    cursor: pointer;
+}
 
-// ======================================================
-// DÉCONNEXION
-// ======================================================
+.hidden {
+    display: none !important;
+}
 
-function deconnexion() {
+/* HEADER */
+header {
+    height: 70px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 25px;
+    border-bottom: 1px solid #202633;
+    background: #0c1019;
+}
 
-    localStorage.removeItem(
-        "nexus_session_email"
-    );
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 3px;
+    cursor: pointer;
+}
 
-    utilisateurActif = null;
+.logo span {
+    color: #6c8cff;
+}
 
-    historiqueConversation = [];
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-badge {
+    background: #151b29;
+    border: 1px solid #293247;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.logout-btn,
+.admin-btn {
+    border: none;
+    border-radius: 9px;
+    padding: 9px 13px;
+    color: white;
+}
+
+.logout-btn {
+    background: #252c3b;
+}
+
+.admin-btn {
+    background: #6c4cff;
+}
+
+/* PAGES */
+.page {
+    min-height: calc(100vh - 70px);
+}
+
+/* HOME */
+.home {
+    max-width: 1000px;
+    margin: auto;
+    padding: 70px 20px;
+}
+
+.hero {
+    text-align: center;
+    padding: 45px 20px;
+}
+
+.hero h1 {
+    font-size: 55px;
+    letter-spacing: 5px;
+    margin-bottom: 15px;
+}
+
+.hero h1 span {
+    color: #6c8cff;
+}
+
+.hero p {
+    color: #aeb6c8;
+    font-size: 18px;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.6;
+}
+
+.primary-btn {
+    margin-top: 30px;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 12px;
+    background: #6c8cff;
+    color: white;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 40px;
+}
+
+.card {
+    background: #101521;
+    border: 1px solid #202a3b;
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.card h3 {
+    margin-bottom: 8px;
+}
+
+.card p {
+    color: #9da7ba;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+/* AUTH */
+.auth-container {
+    width: 100%;
+    max-width: 450px;
+    margin: 50px auto;
+    padding: 20px;
+}
+
+.auth-box {
+    background: #101521;
+    border: 1px solid #232c3d;
+    border-radius: 18px;
+    padding: 30px;
+}
+
+.auth-box h2 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #9da7ba;
+    margin-bottom: 25px;
+}
+
+.field {
+    margin-bottom: 16px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 7px;
+    color: #c7cede;
+    font-size: 14px;
+}
+
+.field input,
+.field select {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: 1px solid #303a4e;
+    background: #090d15;
+    color: white;
+    outline: none;
+}
+
+.field input:focus,
+.field select:focus {
+    border-color: #6c8cff;
+}
+
+.field-error {
+    color: #ff7a7a;
+    font-size: 13px;
+    margin-top: 6px;
+    display: none;
+}
+
+.auth-btn {
+    width: 100%;
+    padding: 13px;
+    border: none;
+    border-radius: 10px;
+    background: #6c8cff;
+    color: white;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
+.auth-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.switch-auth {
+    text-align: center;
+    margin-top: 20px;
+    color: #9da7ba;
+    font-size: 14px;
+}
+
+.link-btn {
+    background: none;
+    border: none;
+    color: #7e9aff;
+}
+
+/* DASHBOARD */
+.dashboard {
+    max-width: 1100px;
+    margin: auto;
+    padding: 35px 20px;
+}
+
+.welcome {
+    margin-bottom: 25px;
+}
+
+.welcome h2 {
+    margin-bottom: 7px;
+}
+
+.welcome p {
+    color: #9da7ba;
+}
+
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.quick-btn {
+    background: #111826;
+    border: 1px solid #293449;
+    color: white;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: left;
+}
+
+.quick-btn:hover {
+    border-color: #6c8cff;
+}
+
+/* CHAT */
+.chat-container {
+    max-width: 1000px;
+    height: calc(100vh - 110px);
+    margin: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-title {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.chat-title p {
+    color: #9da7ba;
+    margin-top: 5px;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 15px 5px;
+}
+
+.message {
+    max-width: 85%;
+    padding: 14px 16px;
+    margin-bottom: 15px;
+    border-radius: 15px;
+    line-height: 1.55;
+    white-space: pre-wrap;
+}
+
+.message.user {
+    background: #26375f;
+    margin-left: auto;
+}
+
+.message.ai {
+    background: #121927;
+    border: 1px solid #273247;
+    margin-right: auto;
+}
+
+.message.error {
+    background: #3a1d24;
+    border: 1px solid #6b2c37;
+    margin-right: auto;
+}
+
+.message strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 8px;
+    background: #101521;
+    border: 1px solid #283247;
+    border-radius: 14px;
+    padding: 8px;
+}
+
+.chat-input {
+    flex: 1;
+    resize: none;
+    min-height: 48px;
+    max-height: 140px;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 13px;
+}
+
+.icon-btn {
+    width: 48px;
+    height: 48px;
+    border: none;
+    border-radius: 10px;
+    background: #202a3d;
+    color: white;
+    font-size: 20px;
+}
+
+.icon-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.send-btn {
+    background: #6c8cff;
+}
+
+.mic-active {
+    background: #b33a3a;
+}
+
+.typing {
+    color: #8f9ab0;
+    font-size: 13px;
+    padding: 5px;
+}
+
+.back-link {
+    background: none;
+    border: none;
+    color: #7e9aff;
+    font-size: 13px;
+}
+
+/* ADMIN */
+.admin-container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 35px 20px;
+}
+
+.admin-title {
+    margin-bottom: 25px;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.stat {
+    background: #111826;
+    border: 1px solid #293449;
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    margin-top: 8px;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 30px;
+    background: #101521;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.users-table th,
+.users-table td {
+    padding: 13px;
+    text-align: left;
+    border-bottom: 1px solid #293247;
+}
+
+.users-table th {
+    color: #8fa1c5;
+}
+
+.empty-row td {
+    color: #6c7794;
+    text-align: center;
+    padding: 25px;
+}
+
+.back-btn {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 9px;
+    background: #252c3b;
+    color: white;
+}
+
+/* NOTIFICATION */
+.notification {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #161d2b;
+    border: 1px solid #303b51;
+    padding: 12px 18px;
+    border-radius: 10px;
+    display: none;
+    z-index: 1000;
+    max-width: 90%;
+    text-align: center;
+}
+
+.notification.error {
+    border-color: #6b2c37;
+    background: #201017;
+}
+
+/* MOBILE */
+@media(max-width:600px) {
+    header {
+        padding: 0 12px;
+    }
+
+    .logo {
+        font-size: 20px;
+    }
+
+    .user-badge {
+        display: none;
+    }
+
+    .hero h1 {
+        font-size: 42px;
+    }
+
+    .message {
+        max-width: 92%;
+    }
+
+    .users-table {
+        font-size: 12px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo" onclick="handleLogoClick()">NE<span>X</span>US</div>
+
+    <div class="header-right" id="headerRight">
+        <div class="user-badge hidden" id="userBadge"></div>
+        <button class="admin-btn hidden" id="adminHeaderBtn" onclick="showAdmin()">
+            Admin
+        </button>
+        <button class="logout-btn hidden" id="logoutBtn" onclick="logout()">
+            Déconnexion
+        </button>
+    </div>
+</header>
 
 
-    document.getElementById("app-section")
-        .style.display = "none";
+<!-- ACCUEIL -->
+<section id="homePage" class="page">
+    <div class="home">
 
-    document.getElementById("auth-section")
-        .style.display = "block";
+        <div class="hero">
+            <h1>NE<span>X</span>US</h1>
 
+            <p>
+                Une intelligence artificielle conçue pour créer
+                une connexion entre ton problème et des solutions
+                concrètes.
+            </p>
 
-    // Nettoyage du chat
-    const chat =
-        document.getElementById("chat-container");
+            <button class="primary-btn" onclick="handlePrimaryClick()">
+                Commencer
+            </button>
+        </div>
 
-    if (chat) {
+        <div class="cards">
 
-        chat.innerHTML = `
-            <div class="message assistant">
-                Bonjour ! Je suis NEXUS, créé par Otoghe nzé Aristide.
-                Comment puis-je t'aider aujourd'hui ?
+            <div class="card">
+                <h3>📚 Études</h3>
+                <p>
+                    Mathématiques, physique, chimie,
+                    sciences et autres matières.
+                </p>
             </div>
-        `;
-    }
-}
 
+            <div class="card">
+                <h3>💡 Projets</h3>
+                <p>
+                    Transformer une idée en projet
+                    avec des étapes concrètes.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>💼 Entreprise</h3>
+                <p>
+                    Réflexion sur les projets,
+                    organisation et entrepreneuriat.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>💻 Technologie</h3>
+                <p>
+                    Programmation, applications,
+                    informatique et technologie.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🧠 Réflexion</h3>
+                <p>
+                    Analyser une situation et
+                    explorer plusieurs possibilités.
+                </p>
+            </div>
+
+            <div class="card">
+                <h3>🌍 Adaptation</h3>
+                <p>
+                    Les réponses peuvent tenir compte
+                    du pays choisi par l'utilisateur.
+                </p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<!-- CONNEXION -->
+<section id="loginPage" class="page hidden">
+
+    <div class="auth-container">
+
+        <div class="auth-box">
+
+            <h2>Connexion</h2>
+
+            <p class="subtitle">
+                Connecte-toi à ton compte NEXUS.
+            </p>
+
+            <div class="field">
+                <label>Email</label>
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="exemple@email.com"
+                >
+            </div>
+
+            <div class="field">
+                <label>Mot de passe</label>
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Mot de passe"
+                    onkeydown="if(event.key==='Enter'){login();}"
+                >
+            </div>
+
+            <div class="field-error" id="loginError"></div>
+
+            <button class="auth-btn" id="loginBtn" onclick="login()">
+                Se connecter
+            </button>
+
+            <div class="switch-auth">
+                Pas encore de compte ?
+                <button class="link-btn" onclick="showRegister()">
+                    Créer un compte
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- INSCRIPTION -->
+<section id="registerPage" class="page hidden">
+
+    <div class="auth-container">
+
+        <div class="auth-box">
+
+            <h2>Créer un compte</h2>
+
+            <p class="subtitle">
+                Rejoins NEXUS.
+            </p>
+
+            <div class="field">
+                <label>Nom</label>
+                <input
+                    type="text"
+                    id="registerName"
+                    placeholder="Ton nom"
+                >
+            </div>
 
-// ======================================================
-// CHARGEMENT DE L'APPLICATION
-// ======================================================
+            <div class="field">
+                <label>Email</label>
+                <input
+                    type="email"
+                    id="registerEmail"
+                    placeholder="exemple@email.com"
+                >
+            </div>
 
-function chargerInterfaceApp() {
+            <div class="field">
+                <label>Pays</label>
 
-    if (!utilisateurActif) {
-        return;
-    }
+                <select id="registerCountry">
 
+                    <option value="">
+                        Sélectionner ton pays
+                    </option>
 
-    document.getElementById("auth-section")
-        .style.display = "none";
+                    <option value="Gabon">
+                        🇬🇦 Gabon
+                    </option>
 
-    document.getElementById("app-section")
-        .style.display = "block";
+                    <option value="Cameroun">
+                        🇨🇲 Cameroun
+                    </option>
 
+                    <option value="Côte d'Ivoire">
+                        🇨🇮 Côte d'Ivoire
+                    </option>
 
-    document.getElementById("user-welcome-text")
-        .textContent =
-        `Bienvenue, ${utilisateurActif.nom}`;
+                    <option value="Sénégal">
+                        🇸🇳 Sénégal
+                    </option>
 
+                    <option value="Congo">
+                        🇨🇬 Congo
+                    </option>
 
-    document.getElementById("user-country-display")
-        .textContent =
-        `Pays : ${utilisateurActif.pays} | Rôle : ${utilisateurActif.role}`;
+                    <option value="RDC">
+                        🇨🇩 République démocratique du Congo
+                    </option>
 
+                    <option value="France">
+                        🇫🇷 France
+                    </option>
 
-    if (utilisateurActif.email === ADMIN_EMAIL) {
+                    <option value="Belgique">
+                        🇧🇪 Belgique
+                    </option>
 
-        document.getElementById("admin-panel")
-            .style.display = "block";
+                    <option value="Canada">
+                        🇨🇦 Canada
+                    </option>
 
-        chargerAdmin();
+                    <option value="États-Unis">
+                        🇺🇸 États-Unis
+                    </option>
 
-    } else {
+                    <option value="Autre">
+                        🌍 Autre
+                    </option>
 
-        document.getElementById("admin-panel")
-            .style.display = "none";
-    }
-}
+                </select>
+            </div>
 
+            <div class="field">
+                <label>Mot de passe</label>
 
-// ======================================================
-// ADMINISTRATION
-// ======================================================
+                <input
+                    type="password"
+                    id="registerPassword"
+                    placeholder="Créer un mot de passe (6 caractères min.)"
+                >
+            </div>
 
-function chargerAdmin() {
+            <div class="field">
+                <label>Confirmer le mot de passe</label>
+
+                <input
+                    type="password"
+                    id="registerConfirm"
+                    placeholder="Confirmer"
+                    onkeydown="if(event.key==='Enter'){register();}"
+                >
+            </div>
 
-    const tbody =
-        document.getElementById("admin-users-tbody");
+            <div class="field-error" id="registerError"></div>
 
-    if (!tbody) {
-        return;
-    }
+            <button class="auth-btn" id="registerBtn" onclick="register()">
+                Créer mon compte
+            </button>
 
+            <div class="switch-auth">
 
-    tbody.innerHTML = "";
+                Déjà un compte ?
 
+                <button class="link-btn" onclick="showLogin()">
+                    Se connecter
+                </button>
 
-    const utilisateurs =
-        JSON.parse(
-            localStorage.getItem("nexus_users_db") || "[]"
-        );
+            </div>
 
+        </div>
 
-    utilisateurs.forEach((u, i) => {
+    </div>
 
-        const tr =
-            document.createElement("tr");
+</section>
 
 
-        tr.innerHTML = `
-            <td style="padding:0.5rem;">
-                ${echapperHTML(u.nom)}
-            </td>
+<!-- DASHBOARD -->
+<section id="dashboardPage" class="page hidden">
 
-            <td style="padding:0.5rem;">
-                ${echapperHTML(u.email)}
-            </td>
+    <div class="dashboard">
 
-            <td style="padding:0.5rem;">
-                ${echapperHTML(u.pays)}
-            </td>
+        <div class="welcome">
 
-            <td style="padding:0.5rem;">
-                ${echapperHTML(u.role)}
-            </td>
+            <h2 id="welcomeTitle">
+                Bienvenue sur NEXUS
+            </h2>
 
-            <td style="padding:0.5rem;">
-                ${
-                    u.email !== ADMIN_EMAIL
-                        ? `
-                            <button
-                                onclick="supprimerUser(${i})"
-                                class="btn-danger"
-                                style="padding:0.2rem 0.5rem;font-size:0.75rem;">
-                                X
-                            </button>
-                          `
-                        : "Protégé"
-                }
-            </td>
-        `;
+            <p id="countryText"></p>
 
+        </div>
 
-        tbody.appendChild(tr);
-    });
-}
 
+        <div class="quick-actions">
 
-// ======================================================
-// SUPPRIMER UTILISATEUR
-// ======================================================
+            <button
+                class="quick-btn"
+                onclick="startTopic('Mathématiques')"
+            >
+                <strong>📐 Mathématiques</strong>
+                <br><br>
+                Résoudre et comprendre un exercice.
+            </button>
+
+            <button
+                class="quick-btn"
+                onclick="startTopic('Physique-Chimie')"
+            >
+                <strong>⚗️ Physique-Chimie</strong>
+                <br><br>
+                Comprendre un problème scientifique.
+            </button>
+
+            <button
+                class="quick-btn"
+                onclick="startTopic('Projet')"
+            >
+                <strong>🚀 Mon projet</strong>
+                <br><br>
+                Transformer une idée en plan d'action.
+            </button>
 
-function supprimerUser(i) {
+            <button
+                class="quick-btn"
+                onclick="startTopic('Entreprise')"
+            >
+                <strong>💼 Entreprise</strong>
+                <br><br>
+                Réfléchir à une idée d'entreprise.
+            </button>
 
-    let utilisateurs =
-        JSON.parse(
-            localStorage.getItem("nexus_users_db") || "[]"
-        );
+            <button
+                class="quick-btn"
+                onclick="startTopic('Programmation')"
+            >
+                <strong>💻 Programmation</strong>
+                <br><br>
+                Construire et corriger du code.
+            </button>
 
+            <button
+                class="quick-btn"
+                onclick="startTopic('Autre problème')"
+            >
+                <strong>🧠 Autre problème</strong>
+                <br><br>
+                Parler de n'importe quel problème.
+            </button>
 
-    if (!utilisateurs[i]) {
-        return;
-    }
+        </div>
 
+    </div>
 
-    if (utilisateurs[i].email === ADMIN_EMAIL) {
+</section>
 
-        alert("Le compte administrateur est protégé.");
 
-        return;
-    }
+<!-- CHAT -->
+<section id="chatPage" class="page hidden">
 
+    <div class="chat-container">
 
-    utilisateurs.splice(i, 1);
+        <div class="chat-title">
+            <div>
+                <h2 id="chatTopicTitle">💬 NEXUS</h2>
+                <p>
+                    Explique-moi ton problème. On va chercher
+                    ensemble des solutions.
+                </p>
+            </div>
+            <button class="back-link" onclick="showDashboard()">← Retour au tableau de bord</button>
+        </div>
 
 
-    localStorage.setItem(
-        "nexus_users_db",
-        JSON.stringify(utilisateurs)
-    );
+        <div
+            class="chat-messages"
+            id="chatMessages"
+        ></div>
 
+        <div
+            class="typing hidden"
+            id="typing"
+        >
+            NEXUS réfléchit...
+        </div>
 
-    chargerAdmin();
-}
 
+        <div class="chat-input-area">
 
-// ======================================================
-// CATÉGORIES
-// ======================================================
+            <textarea
+                id="chatInput"
+                class="chat-input"
+                placeholder="Écris ton problème ici..."
+                onkeydown="handleEnter(event)"
+            ></textarea>
 
-function selectionnerCategorie(cat, el) {
+            <button
+                class="icon-btn"
+                id="micBtn"
+                onclick="startMicrophone()"
+                title="Parler"
+            >
+                🎤
+            </button>
 
-    categorieCourante = cat;
+            <button
+                class="icon-btn send-btn"
+                id="sendBtn"
+                onclick="sendMessage()"
+                title="Envoyer"
+            >
+                ➤
+            </button>
 
+        </div>
 
-    document
-        .querySelectorAll(".category-btn")
-        .forEach(button => {
+    </div>
 
-            button.classList.remove("active");
-        });
+</section>
 
 
-    if (el) {
-        el.classList.add("active");
-    }
+<!-- ADMIN -->
+<section id="adminPage" class="page hidden">
 
+    <div class="admin-container">
 
-    // On informe visuellement l'utilisateur
-    ajouterMsg(
-        `Domaine sélectionné : ${cat}`,
-        "assistant"
-    );
-}
+        <button
+            class="back-btn"
+            onclick="showDashboard()"
+        >
+            ← Retour
+        </button>
 
+        <div class="admin-title">
 
-// ======================================================
-// AJOUTER UN MESSAGE AU CHAT
-// ======================================================
+            <h2>🛠️ Administration NEXUS</h2>
 
-function ajouterMsg(texte, type, id = null) {
+            <p class="subtitle">
+                Espace réservé à l'administrateur.
+            </p>
 
-    const chat =
-        document.getElementById("chat-container");
+        </div>
 
 
-    if (!chat) {
-        return null;
-    }
+        <div class="stats">
 
+            <div class="stat">
 
-    const message =
-        document.createElement("div");
+                <div>Utilisateurs</div>
 
+                <div
+                    class="stat-number"
+                    id="userCount"
+                >
+                    0
+                </div>
 
-    message.className =
-        `message ${type}`;
+            </div>
 
 
-    if (id) {
-        message.id = id;
-    }
+            <div class="stat">
 
+                <div>Administrateurs</div>
 
-    message.textContent = texte;
+                <div
+                    class="stat-number"
+                    id="adminCount"
+                >
+                    0
+                </div>
 
+            </div>
 
-    chat.appendChild(message);
+        </div>
 
 
-    // Descendre automatiquement en bas
-    chat.scrollTop = chat.scrollHeight;
+        <table class="users-table">
 
+            <thead>
 
-    return message;
-}
+                <tr>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Pays</th>
+                    <th>Admin</th>
+                </tr>
 
+            </thead>
 
-// ======================================================
-// ENVOYER UN MESSAGE À NEXUS
-// ======================================================
+            <tbody id="usersTableBody"></tbody>
 
-async function envoyerMessage() {
+        </table>
 
-    const input =
-        document.getElementById("chat-input");
+    </div>
 
+</section>
 
-    if (!input) {
-        return;
-    }
 
+<div
+    class="notification"
+    id="notification"
+></div>
 
-    const texte =
-        input.value.trim();
 
+<script>
 
-    if (!texte) {
-        return;
-    }
+/* =========================================================
+   CONFIGURATION NEXUS
+   ========================================================= */
 
+/*
+   IMPORTANT — sécurité :
 
-    if (!utilisateurActif) {
+   Ce fichier tourne entièrement dans le navigateur (pas de
+   serveur). Toute clé écrite ici est visible par quiconque
+   ouvre le code source de la page ("Inspecter" > Sources).
 
-        ajouterMsg(
-            "Veuillez vous connecter avant d'utiliser NEXUS.",
-            "assistant"
-        );
+   Pour un vrai lancement public, il faut un petit serveur
+   relais qui garde la clé côté serveur et que ce fichier
+   appelle à la place de gen.pollinations.ai directement.
 
-        return;
-    }
-
-
-    // Message utilisateur
-    ajouterMsg(texte, "user");
-
-
-    // Nettoyage du champ
-    input.value = "";
-
-
-    // Message temporaire
-    const loadId =
-        "load-" + Date.now();
-
-
-    ajouterMsg(
-        "NEXUS réfléchit...",
-        "assistant",
-        loadId
-    );
-
-
-    // Ajouter la question à l'historique
-    historiqueConversation.push({
-
-        role: "user",
-
-        content: texte
-    });
-
-
-    try {
-
-        // Vérification basique de la clé
-        if (
-            typeof POLLINATIONS_API_KEY === "undefined" ||
-            !POLLINATIONS_API_KEY
-        ) {
-
-            throw new Error(
-                "La clé API NEXUS n'est pas configurée."
-            );
-        }
-
-
-        // Construire le contexte système
-        const contexteSysteme = `
-${SYSTEM_PROMPT}
-
-Informations sur l'utilisateur :
-Nom : ${utilisateurActif.nom}
-Pays : ${utilisateurActif.pays}
-Domaine actuel : ${categorieCourante}
-`;
-
-
-        /*
-         * On envoie l'historique afin que NEXUS
-         * puisse conserver le contexte de la conversation.
-         */
-        const messages = [
-
-            {
-                role: "system",
-                content: contexteSysteme
-            },
-
-            ...historiqueConversation
-        ];
-
-
-        const res =
-            await fetch(
-                "https://gen.pollinations.ai/v1/chat/completions",
-                {
-                    method: "POST",
-
-                    headers: {
-
-                        "Content-Type":
-                            "application/json",
-
-                        "Authorization":
-                            `Bearer ${POLLINATIONS_API_KEY}`
-                    },
-
-                    body: JSON.stringify({
-
-                        model:
-                            "openai/gpt-5.6-luna",
-
-                        messages: messages,
-
-                        temperature: 0.7
-                    })
-                }
-            );
-
-
-        // Vérification HTTP
-        if (!res.ok) {
-
-            let details = "";
-
-            try {
-
-                details =
-                    await res.text();
-
-            } catch (e) {
-
-                details = "";
-            }
-
-
-            throw new Error(
-                `Erreur API (${res.status}) ${details}`
-            );
-        }
-
-
-        // Conversion JSON
-        const data =
-            await res.json();
-
-
-        /*
-         * Vérification de la structure de réponse
-         */
-        const reponse =
-            data?.choices?.[0]?.message?.content;
-
-
-        if (
-            !reponse ||
-            typeof reponse !== "string"
-        ) {
-
-            throw new Error(
-                "L'API a renvoyé une réponse vide ou invalide."
-            );
-        }
-
-
-        // Supprimer "NEXUS réfléchit..."
-        const loader =
-            document.getElementById(loadId);
-
-        if (loader) {
-            loader.remove();
-        }
-
-
-        // Ajouter la réponse à l'historique
-        historiqueConversation.push({
-
-            role: "assistant",
-
-            content: reponse
-        });
-
-
-        // Afficher la réponse
-        ajouterMsg(
-            reponse,
-            "assistant"
-        );
-
-
-    } catch (erreur) {
-
-        console.error(
-            "Erreur NEXUS :",
-            erreur
-        );
-
-
-        // Supprimer le message de chargement
-        const loader =
-            document.getElementById(loadId);
-
-        if (loader) {
-            loader.remove();
-        }
-
-
-        /*
-         * Retirer le dernier message utilisateur
-         * de l'historique si l'appel a échoué.
-         */
-        if (
-            historiqueConversation.length > 0 &&
-            historiqueConversation[
-                historiqueConversation.length - 1
-            ].role === "user"
-        ) {
-
-            historiqueConversation.pop();
-        }
-
-
-        let messageErreur =
-            "Une erreur s'est produite pendant la communication avec NEXUS.";
-
-
-        if (
-            erreur &&
-            erreur.message
-        ) {
-
-            messageErreur +=
-                `\n\nDétail : ${erreur.message}`;
-        }
-
-
-        ajouterMsg(
-            messageErreur,
-            "assistant"
-        );
-    }
-}
-
-
-// ======================================================
-// MICRO
-// ======================================================
-
-let reconnaissanceVocale = null;
-let microActif = false;
-
-
-function alternerMicro() {
-
-    const bouton =
-        document.getElementById("mic-btn");
-
-
-    // Vérifier la disponibilité
-    const SpeechRecognition =
-        window.SpeechRecognition ||
-        window.webkitSpeechRecognition;
-
-
-    if (!SpeechRecognition) {
-
-        alert(
-            "La reconnaissance vocale n'est pas disponible dans ce navigateur."
-        );
-
-        return;
-    }
-
-
-    // Si le micro est déjà actif
-    if (microActif) {
-
-        if (reconnaissanceVocale) {
-            reconnaissanceVocale.stop();
-        }
-
-        return;
-    }
-
-
-    reconnaissanceVocale =
-        new SpeechRecognition();
-
-
-    reconnaissanceVocale.lang = "fr-FR";
-
-    reconnaissanceVocale.continuous = false;
-
-    reconnaissanceVocale.interimResults = false;
-
-
-    reconnaissanceVocale.onstart = function () {
-
-        microActif = true;
-
-        if (bouton) {
-
-            bouton.classList.add("listening");
-
-            bouton.title =
-                "Arrêter le micro";
-        }
-    };
-
-
-    reconnaissanceVocale.onresult =
-        function (event) {
-
-            const resultat =
-                event.results?.[0]?.[0]?.transcript;
-
-
-            if (resultat) {
-
-                const input =
-                    document.getElementById("chat-input");
-
-
-                if (input) {
-
-                    input.value =
-                        resultat;
-                }
-            }
-        };
-
-
-    reconnaissanceVocale.onerror =
-        function (event) {
-
-            console.error(
-                "Erreur micro :",
-                event.error
-            );
-        };
-
-
-    reconnaissanceVocale.onend =
-        function () {
-
-            microActif = false;
-
-
-            if (bouton) {
-
-                bouton.classList.remove(
-                    "listening"
-                );
-
-                bouton.title =
-                    "Activer le micro";
-            }
-        };
-
-
-    reconnaissanceVocale.start();
-}
-
-
-// ======================================================
-// ÉCHAPPEMENT HTML
-// ======================================================
-
-function echapperHTML(texte) {
-
-    return String(texte)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
-}
-        </script>
+   Pour un prototype/démo perso, t
