@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus EI - Résolution Intelligente de Problèmes</title>
+    <title>Nexus EI - Compagnon Intelligent de Résolution</title>
     <style>
         :root {
-            --primary-bordeaux: #7A1C2E;
-            --secondary-red: #A3293F;
-            --dark-bg: #121212;
-            --card-bg: #1E1E1E;
-            --text-main: #E0E0E0;
-            --text-muted: #A0A0A0;
-            --border-color: #333333;
+            --primary-blue: #1E3A8A;
+            --accent-cyan: #06B6D4;
+            --dark-bg: #0F172A;
+            --card-bg: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --border-color: #334155;
         }
 
         * {
@@ -31,10 +31,10 @@
         }
 
         header {
-            background: linear-gradient(135deg, #4A0E1A, var(--primary-bordeaux));
+            background: linear-gradient(135deg, #1E1B4B, var(--primary-blue));
             padding: 2.5rem 2rem;
             text-align: center;
-            border-bottom: 3px solid var(--secondary-red);
+            border-bottom: 3px solid var(--accent-cyan);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
 
@@ -48,7 +48,7 @@
 
         header p {
             font-size: 1.1rem;
-            color: #FFD1DC;
+            color: #93C5FD;
             max-width: 600px;
             margin: 0 auto;
         }
@@ -72,9 +72,9 @@
 
         .card h2 {
             font-size: 1.5rem;
-            color: var(--secondary-red);
+            color: var(--accent-cyan);
             margin-bottom: 1rem;
-            border-left: 4px solid var(--primary-bordeaux);
+            border-left: 4px solid var(--primary-blue);
             padding-left: 10px;
         }
 
@@ -92,7 +92,7 @@
 
         input[type="email"], textarea {
             width: 100%;
-            background-color: #2A2A2A;
+            background-color: #0F172A;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
@@ -107,12 +107,19 @@
 
         input[type="email"]:focus, textarea:focus {
             outline: none;
-            border-color: var(--secondary-red);
-            box-shadow: 0 0 5px rgba(163, 41, 63, 0.5);
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 5px rgba(6, 182, 212, 0.5);
+        }
+
+        .button-row {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            align-items: center;
         }
 
         button {
-            background-color: var(--primary-bordeaux);
+            background-color: var(--primary-blue);
             color: #FFFFFF;
             border: none;
             border-radius: 8px;
@@ -121,23 +128,43 @@
             font-weight: bold;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.1s ease;
-            align-self: flex-end;
         }
 
         button:hover {
-            background-color: var(--secondary-red);
+            background-color: #2563EB;
         }
 
         button:active {
             transform: scale(0.98);
         }
 
+        .btn-mic {
+            background-color: #334155;
+            border: 1px solid var(--accent-cyan);
+            padding: 0.8rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-mic.listening {
+            background-color: var(--accent-cyan);
+            color: #0F172A;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
         #result-container {
             margin-top: 1.5rem;
             padding: 1.2rem;
-            background-color: #161616;
+            background-color: #0F172A;
             border-radius: 8px;
-            border-left: 4px solid var(--secondary-red);
+            border-left: 4px solid var(--accent-cyan);
             display: none;
             white-space: pre-wrap;
             line-height: 1.6;
@@ -145,8 +172,8 @@
 
         .notebook-area {
             width: 100%;
-            height: 100px;
-            background-color: #2A2A2A;
+            height: 120px;
+            background-color: #0F172A;
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1rem;
@@ -158,8 +185,8 @@
 
         #admin-panel {
             display: none;
-            background-color: #2A1216;
-            border: 2px solid var(--secondary-red);
+            background-color: #172554;
+            border: 2px solid var(--accent-cyan);
             padding: 1.5rem;
             border-radius: 12px;
             margin-bottom: 2rem;
@@ -169,22 +196,27 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #1E1E1E;
-            padding: 0.5rem 1rem;
+            background: #1E293B;
+            padding: 0.8rem 1rem;
             margin-top: 0.5rem;
             border-radius: 6px;
+            border-left: 3px solid var(--accent-cyan);
         }
 
         .btn-danger {
-            background-color: #A3293F;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
+            background-color: #991B1B;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+
+        .btn-danger:hover {
+            background-color: #B91C1C;
         }
 
         footer {
             text-align: center;
             padding: 1.5rem;
-            background-color: #0D0D0D;
+            background-color: #090D16;
             color: var(--text-muted);
             font-size: 0.9rem;
             border-top: 1px solid var(--border-color);
@@ -195,44 +227,52 @@
 
     <header>
         <h1>NEXUS EI</h1>
-        <p>Votre assistant intelligent pour identifier et résoudre vos problèmes étape par étape.</p>
+        <p>Votre compagnon bienveillant pour vous écouter, vous rassurer et résoudre vos problèmes du quotidien.</p>
     </header>
 
     <main>
         <!-- Section Connexion / Identification -->
         <section class="card" id="login-section">
             <h2>Connexion à Nexus EI</h2>
-            <p class="description-text">Entrez votre adresse e-mail pour accéder à l'application.</p>
+            <p class="description-text">Entrez votre adresse e-mail pour accéder à votre espace d'assistance sécurisé.</p>
             <div class="form-group">
                 <input type="email" id="user-email" placeholder="votre.email@exemple.com">
                 <button onclick="connecterUtilisateur()">Se connecter</button>
             </div>
         </section>
 
-        <!-- Panneau Administrateur -->
+        <!-- Panneau Administrateur Concret -->
         <div id="admin-panel">
-            <h2>Panneau d'Administration (Admin)</h2>
-            <p class="description-text">Bienvenue Maître. Vous pouvez voir les utilisateurs connectés et les déconnecter si nécessaire.</p>
+            <h2>Panneau d'Administration (Maître)</h2>
+            <p class="description-text">Gestion globale des utilisateurs connectés à Nexus EI :</p>
             <div id="users-list"></div>
         </div>
 
         <!-- Section Application principale -->
         <section class="card" id="app-section" style="display: none;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                <h2 style="margin-bottom: 0;">Résoudre un problème</h2>
+                <h2 style="margin-bottom: 0;">Parler à Nexus EI</h2>
                 <button onclick="deconnecter()" class="btn-danger">Se déconnecter</button>
             </div>
+            
             <div class="form-group">
-                <label for="problem-input" style="color: var(--text-main); font-weight: 500;">Décrivez votre problème ci-dessous :</label>
-                <textarea id="problem-input" placeholder="Ex: Je ne comprends les maths, comment créer une entreprise..."></textarea>
-                <button id="solve-btn" onclick="resoudreProbleme()">Lancer la résolution</button>
+                <label for="problem-input" style="color: var(--text-main); font-weight: 500;">Exprimez votre problème ou écrivez ce que vous avez sur le cœur :</label>
+                <textarea id="problem-input" placeholder="Ex: Je traverse un moment difficile, comment surmonter ce blocage..."></textarea>
+                
+                <div class="button-row">
+                    <button type="button" class="btn-mic" id="mic-btn" onclick="toggleSpeechRecognition()" title="Dicter par la voix">
+                        🎙️ <span id="mic-text">Parler</span>
+                    </button>
+                    <button id="solve-btn" onclick="resoudreProbleme()">Demander de l'aide à Nexus EI</button>
+                </div>
             </div>
+            
             <div id="result-container"></div>
             
             <div style="margin-top: 2rem;">
-                <h3 style="color: var(--secondary-red); font-size: 1.2rem; margin-bottom: 0.5rem;">Bloc-notes de sauvegarde</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Gardez ici vos solutions et notes importantes proposées par Nexus EI :</p>
-                <textarea class="notebook-area" id="user-notebook" placeholder="Collez ou notez vos solutions ici..."></textarea>
+                <h3 style="color: var(--accent-cyan); font-size: 1.2rem; margin-bottom: 0.5rem;">Bloc-notes de sauvegarde</h3>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Conservez ici vos solutions, idées ou messages rassurants proposés par Nexus EI :</p>
+                <textarea class="notebook-area" id="user-notebook" placeholder="Vos notes enregistrées automatiquement ici..."></textarea>
             </div>
         </section>
     </main>
@@ -298,15 +338,19 @@
             let activeUsers = JSON.parse(localStorage.getItem("nexus_active_users") || "[]");
             
             if (activeUsers.length === 0) {
-                usersListDiv.innerHTML = "<p style='color: var(--text-muted);'>Aucun utilisateur enregistré.</p>";
+                usersListDiv.innerHTML = "<p style='color: var(--text-muted);'>Aucun utilisateur enregistré pour le moment.</p>";
                 return;
             }
 
             let html = "";
             activeUsers.forEach(user => {
+                let noteCount = localStorage.getItem("nexus_note_" + user) ? "Notes enregistrées" : "Aucune note";
                 html += `<div class="user-item">
-                    <span>${user} ${user === ADMIN_EMAIL.toLowerCase() ? '(Admin)' : ''}</span>
-                    <button class="btn-danger" onclick="forcerDeconnexion('${user}')">Déconnecter</button>
+                    <div>
+                        <strong>${user}</strong> ${user === ADMIN_EMAIL.toLowerCase() ? '<span style="color: #38BDF8;">(Administrateur Principal)</span>' : ''}
+                        <br><small style="color: var(--text-muted);">${noteCount}</small>
+                    </div>
+                    <button class="btn-danger" onclick="forcerDeconnexion('${user}')">Déconnecter l'utilisateur</button>
                 </div>`;
             });
             usersListDiv.innerHTML = html;
@@ -325,36 +369,79 @@
             }
         }
 
+        let recognition;
+        function toggleSpeechRecognition() {
+            const micBtn = document.getElementById('mic-btn');
+            const micText = document.getElementById('mic-text');
+            const problemInput = document.getElementById('problem-input');
+
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                alert("La reconnaissance vocale n'est pas supportée par votre navigateur. Essayez sur Google Chrome.");
+                return;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.lang = 'fr-FR';
+            recognition.interimResults = false;
+
+            micBtn.classList.add('listening');
+            micText.textContent = "Écoute...";
+
+            recognition.onresult = function(event) {
+                const speechResult = event.results[0][0].transcript;
+                problemInput.value += (problemInput.value ? " " : "") + speechResult;
+                micBtn.classList.remove('listening');
+                micText.textContent = "Parler";
+            };
+
+            recognition.onerror = function() {
+                micBtn.classList.remove('listening');
+                micText.textContent = "Parler";
+                alert("Erreur lors de la capture vocale.");
+            };
+
+            recognition.onend = function() {
+                micBtn.classList.remove('listening');
+                micText.textContent = "Parler";
+            };
+
+            recognition.start();
+        }
+
         function resoudreProbleme() {
             const problem = document.getElementById('problem-input').value.trim();
             const resultContainer = document.getElementById('result-container');
             const solveBtn = document.getElementById('solve-btn');
 
             if (!problem) {
-                alert("Veuillez décrire un problème.");
+                alert("Veuillez d'abord exprimer votre problème ou ce que vous ressentez.");
                 return;
             }
 
             resultContainer.style.display = "block";
-            resultContainer.textContent = "Nexus EI analyse votre situation en cours...";
+            resultContainer.textContent = "Nexus EI est à votre écoute et analyse votre situation avec bienveillance...";
             solveBtn.disabled = true;
 
-            setTimeout(() => {
-                let lowerProb = problem.toLowerCase();
-                let reponseTexte = "";
+            let lowerProb = problem.toLowerCase();
 
-                if (lowerProb.includes("qui t'a créé") || lowerProb.includes("qui t a cree") || lowerProb.includes("ton créateur")) {
-                    reponseTexte = "Je m'appelle Nexus EI et j'ai été créé par Otoghe Nzé Aristide.";
-                } else {
-                    reponseTexte = `Analyse de Nexus EI pour : "${problem}"\n\n`;
-                    reponseTexte += `1. **Compréhension du défi** : Identifier la source du blocage et définir l'objectif final à atteindre.\n`;
-                    reponseTexte += `2. **Plan d'action étape par étape** :\n`;
-                    reponseTexte += `   - Étape A : Diviser le problème principal en sous-tâches simples et mesurables.\n`;
-                    reponseTexte += `   - Étape B : Rassembler les ressources, outils ou informations nécessaires.\n`;
-                    reponseTexte += `   - Étape C : Exécuter la première action corrective sans précipitation.\n`;
-                    reponseTexte += `3. **Suivi et Validation** : Vérifier chaque résultat intermédiaire pour s'assurer de la progression vers la résolution complète.\n\n`;
-                    reponseTexte += `*Conseil de Nexus EI : Restez concentré, chaque problème a une solution logique.*`;
-                }
+            if (lowerProb.includes("qui t'a créé") || lowerProb.includes("qui t a cree") || lowerProb.includes("ton créateur")) {
+                setTimeout(() => {
+                    resultContainer.textContent = "Je m'appelle Nexus EI, votre compagnon intelligent et de soutien quotidien, et j'ai été créé par Otoghe Nzé Aristide.";
+                    solveBtn.disabled = false;
+                }, 800);
+                return;
+            }
+
+            setTimeout(() => {
+                let reponseTexte = `💙 **Réponse de Nexus EI à votre situation :**\n\n`;
+                reponseTexte += `Je comprends tout à fait ce que vous traversez. Vous n'êtes pas seul face à cela, et nous allons avancer ensemble pas à pas pour trouver une solution.\n\n`;
+                reponseTexte += `1. **Apaisement et Recul** : Prenez une grande respiration. La première étape consiste à dédramatiser et à séparer ce qui est sous votre contrôle de ce qui ne l'est pas.\n`;
+                reponseTexte += `2. **Plan d'action concret** :\n`;
+                reponseTexte += `   - Identifiez la toute première petite action simple que vous pouvez poser dès aujourd'hui.\n`;
+                reponseTexte += `   - Ne cherchez pas à tout résoudre d'un coup ; avancez à votre rythme.\n`;
+                reponseTexte += `3. **Soutien continu** : Notez les idées importantes de cette solution dans votre bloc-notes ci-dessous pour y revenir quand vous en aurez besoin.\n\n`;
+                reponseTexte += `*« Restez fort, chaque difficulté amène aussi sa part de solution. »* — Créé avec soin par Otoghe Nzé Aristide.`;
 
                 resultContainer.textContent = reponseTexte;
                 solveBtn.disabled = false;
