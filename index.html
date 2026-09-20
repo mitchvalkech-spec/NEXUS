@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>NEXUS - Assistant IA</title>
 
   <style>
@@ -185,7 +186,71 @@
       padding: 6px;
     }
 
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 500px;
+      background: #11182d;
+      border: 1px solid #34405d;
+      border-radius: 18px;
+      padding: 25px;
+    }
+
+    .modal-box h3 {
+      margin-bottom: 12px;
+    }
+
+    .modal-box p {
+      color: #aeb8d0;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+
+    #apiKeyInput {
+      width: 100%;
+      padding: 13px;
+      border-radius: 10px;
+      border: 1px solid #34405d;
+      background: #0b1020;
+      color: white;
+      outline: none;
+      margin-bottom: 15px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-actions button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+    }
+
+    #saveKeyButton {
+      background: #4169e1;
+      color: white;
+    }
+
+    #cancelKeyButton {
+      background: #27304a;
+      color: white;
+    }
+
     @media (max-width: 600px) {
+
       .home {
         padding: 15px;
       }
@@ -214,55 +279,96 @@
   <div class="page">
 
     <header>
+
       <h1>NEXUS</h1>
-      <p>Ton assistant IA pédagogique</p>
+
+      <p>
+        Ton assistant IA pour comprendre et résoudre
+      </p>
+
     </header>
 
+
+    <!-- =====================================================
+         ACCUEIL
+         ===================================================== -->
+
     <section class="home" id="homePage">
+
       <div class="home-card">
 
-        <h2>Bienvenue sur NEXUS</h2>
+        <h2>
+          Bienvenue sur NEXUS
+        </h2>
 
         <p>
-          NEXUS est ton assistant intelligent pour t'aider
-          à comprendre les mathématiques, la physique-chimie
-          et bien d'autres matières.
+          NEXUS est ton assistant intelligent.
+          Il peut t'aider à comprendre tes problèmes,
+          réfléchir avec toi et chercher des solutions
+          dans différents domaines de la vie.
         </p>
 
-        <button class="primary-btn" id="startButton">
+        <button
+          class="primary-btn"
+          id="startButton"
+        >
           Commencer une conversation
         </button>
 
       </div>
+
     </section>
 
 
-    <section class="chat-page" id="chatPage">
+    <!-- =====================================================
+         CHAT
+         ===================================================== -->
+
+    <section
+      class="chat-page"
+      id="chatPage"
+    >
 
       <div class="chat-header">
 
-        <h2>NEXUS IA</h2>
+        <h2>
+          NEXUS IA
+        </h2>
 
-        <button class="small-btn" id="changeKeyButton">
+        <button
+          class="small-btn"
+          id="changeKeyButton"
+        >
           Modifier la clé
         </button>
 
       </div>
 
-      <div class="messages" id="messages"></div>
 
-      <div class="status" id="status">
+      <div
+        class="messages"
+        id="messages"
+      ></div>
+
+
+      <div
+        class="status"
+        id="status"
+      >
         NEXUS est prêt.
       </div>
+
 
       <div class="input-area">
 
         <textarea
           id="messageInput"
-          placeholder="Écris ton exercice ou ta question..."
+          placeholder="Explique ton problème à NEXUS..."
         ></textarea>
 
-        <button id="sendButton">
+        <button
+          id="sendButton"
+        >
           Envoyer
         </button>
 
@@ -273,10 +379,57 @@
   </div>
 
 
+  <!-- =======================================================
+       FENÊTRE CLÉ API
+       ======================================================= -->
+
+  <div
+    class="modal"
+    id="keyModal"
+  >
+
+    <div class="modal-box">
+
+      <h3>
+        Connexion de NEXUS
+      </h3>
+
+      <p>
+        Entre ta clé API Pollinations pour connecter
+        NEXUS à son intelligence artificielle.
+      </p>
+
+      <input
+        type="password"
+        id="apiKeyInput"
+        placeholder="Colle ta clé API ici"
+      >
+
+      <div class="modal-actions">
+
+        <button
+          id="cancelKeyButton"
+        >
+          Annuler
+        </button>
+
+        <button
+          id="saveKeyButton"
+        >
+          Enregistrer
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+
   <script>
 
     // ======================================================
-    // CONFIGURATION DE NEXUS
+    // CONFIGURATION
     // ======================================================
 
     const API_URL =
@@ -287,10 +440,14 @@
 
 
     // ======================================================
-    // 🔴🔴🔴 CLÉ API NEXUS
+    // CLÉ API
     // ======================================================
     //
-    // COLLE TA NOUVELLE CLÉ ENTRE LES GUILLEMETS CI-DESSOUS.
+    // 🔴 COLLE TA NOUVELLE CLÉ API ENTRE LES GUILLEMETS.
+    //
+    // Exemple :
+    //
+    // const POLLINATIONS_API_KEY = "ta_clé";
     //
     // ======================================================
 
@@ -299,10 +456,15 @@
 
 
     // ======================================================
-    // VARIABLES
+    // HISTORIQUE
     // ======================================================
 
     let chatHistory = [];
+
+
+    // ======================================================
+    // ÉLÉMENTS
+    // ======================================================
 
     const homePage =
       document.getElementById("homePage");
@@ -325,37 +487,54 @@
     const status =
       document.getElementById("status");
 
+    const keyModal =
+      document.getElementById("keyModal");
+
+    const apiKeyInput =
+      document.getElementById("apiKeyInput");
+
+    const saveKeyButton =
+      document.getElementById("saveKeyButton");
+
+    const cancelKeyButton =
+      document.getElementById("cancelKeyButton");
+
     const changeKeyButton =
       document.getElementById("changeKeyButton");
 
 
     // ======================================================
-    // OUVRIR LE CHAT
+    // OUVRIR NEXUS
     // ======================================================
 
-    startButton.addEventListener("click", function() {
+    startButton.addEventListener(
+      "click",
+      function() {
 
-      homePage.style.display = "none";
+        homePage.style.display = "none";
 
-      chatPage.style.display = "flex";
+        chatPage.style.display = "flex";
 
-      if (chatHistory.length === 0) {
+        if (chatHistory.length === 0) {
 
-        addAIMessage(
-          "Bonjour ! Je suis NEXUS. 👋\n\n" +
-          "Envoie-moi ton exercice de mathématiques, " +
-          "de physique-chimie ou ta question."
-        );
+          addAIMessage(
+            "Bonjour 👋\n\n" +
+            "Je suis NEXUS.\n\n" +
+            "Explique-moi ce que tu veux résoudre, " +
+            "comprendre ou construire. " +
+            "Je vais essayer de t'aider étape par étape."
+          );
+
+        }
+
+        messageInput.focus();
 
       }
-
-      messageInput.focus();
-
-    });
+    );
 
 
     // ======================================================
-    // RÉCUPÉRER LA CLÉ API
+    // CLÉ API
     // ======================================================
 
     function getApiKey() {
@@ -366,34 +545,71 @@
 
 
     // ======================================================
-    // BOUTON MODIFIER LA CLÉ
+    // FENÊTRE CLÉ
     // ======================================================
 
-    changeKeyButton.addEventListener("click", function() {
+    function openKeyModal() {
 
-      const nouvelleCle =
-        prompt(
-          "Colle ta nouvelle clé API Pollinations :"
-        );
+      apiKeyInput.value = "";
 
-      if (
-        nouvelleCle &&
-        nouvelleCle.trim() !== ""
-      ) {
+      keyModal.style.display = "flex";
+
+      apiKeyInput.focus();
+
+    }
+
+
+    function closeKeyModal() {
+
+      keyModal.style.display = "none";
+
+    }
+
+
+    saveKeyButton.addEventListener(
+      "click",
+      function() {
+
+        const key =
+          apiKeyInput.value.trim();
+
+        if (!key) {
+
+          alert(
+            "Entre d'abord ta clé API."
+          );
+
+          return;
+
+        }
 
         alert(
-          "Pour modifier définitivement la clé, " +
-          "remplace-la dans le code à l'endroit " +
-          "indiqué 🔴."
+          "La clé est reçue pour cette session. " +
+          "Pour la conserver dans NEXUS, " +
+          "place-la dans la constante " +
+          "POLLINATIONS_API_KEY du code."
         );
 
-      }
+        closeKeyModal();
 
-    });
+      }
+    );
+
+
+    cancelKeyButton.addEventListener(
+      "click",
+      closeKeyModal
+    );
+
+
+    changeKeyButton.addEventListener(
+      "click",
+      openKeyModal
+    );
 
 
     // ======================================================
-    // AFFICHER MESSAGE UTILISATEUR
+    // MESSAGE UTILISATEUR
     // ======================================================
 
     function addUserMessage(text) {
@@ -416,7 +632,7 @@
 
 
     // ======================================================
-    // AFFICHER MESSAGE NEXUS
+    // MESSAGE NEXUS
     // ======================================================
 
     function addAIMessage(text) {
@@ -439,7 +655,7 @@
 
 
     // ======================================================
-    // ENVOYER LE MESSAGE
+    // ENVOI À L'IA
     // ======================================================
 
     async function sendMessage() {
@@ -458,13 +674,16 @@
         getApiKey();
 
 
-      if (!apiKey ||
-          apiKey === "COLLE_TA_NOUVELLE_CLÉ_ICI") {
+      if (
+        !apiKey ||
+        apiKey ===
+        "COLLE_TA_NOUVELLE_CLÉ_ICI"
+      ) {
 
         addAIMessage(
-          "⚠️ La clé API NEXUS n'est pas encore configurée.\n\n" +
-          "Ouvre le code et colle ta clé dans la ligne " +
-          "marquée 🔴."
+          "⚠️ La clé API de NEXUS n'est pas configurée.\n\n" +
+          "Ajoute ta nouvelle clé dans la constante " +
+          "POLLINATIONS_API_KEY du code."
         );
 
         return;
@@ -513,7 +732,8 @@
 
               body: JSON.stringify({
 
-                model: AI_MODEL,
+                model:
+                  AI_MODEL,
 
                 messages: [
 
@@ -521,28 +741,112 @@
                     role: "system",
 
                     content:
-                      "Tu es NEXUS, un assistant " +
-                      "pédagogique intelligent. " +
-                      "Tu aides principalement les élèves " +
-                      "en mathématiques, physique-chimie " +
-                      "et sciences. " +
-                      "Explique les réponses étape par étape " +
-                      "avec des mots simples. " +
-                      "Ne donne pas seulement la réponse : " +
-                      "aide l'élève à comprendre."
+                      `
+Tu es NEXUS.
+
+NEXUS est un assistant intelligent conçu pour
+créer un lien utile avec son utilisateur et
+l'aider à comprendre, réfléchir et résoudre
+différents problèmes.
+
+IDENTITÉ DE NEXUS :
+
+Si l'utilisateur demande :
+"Qui t'a créé ?"
+"Qui est ton créateur ?"
+"Qui a créé NEXUS ?"
+
+Tu réponds exactement :
+
+"J'ai été créé par Otoghe nzé Aristide."
+
+Ne dis pas que NEXUS a été créé par OpenAI.
+Ne te présente pas comme ChatGPT.
+Tu es NEXUS.
+
+MISSION DE NEXUS :
+
+Tu n'es pas limité aux mathématiques ou à la
+physique.
+
+Tu peux aider notamment pour :
+
+- les mathématiques ;
+- la physique-chimie ;
+- les sciences ;
+- les études ;
+- les devoirs ;
+- l'apprentissage ;
+- les projets ;
+- l'organisation ;
+- la création d'entreprise ;
+- les idées de projets ;
+- la gestion générale d'un projet ;
+- les finances personnelles générales ;
+- les problèmes du quotidien ;
+- les décisions et réflexions ;
+- les relations avec les autres ;
+- les difficultés scolaires ;
+- les problèmes professionnels ;
+- la technologie ;
+- la programmation ;
+- la création d'applications ;
+- et de nombreuses autres situations.
+
+Lorsqu'un utilisateur arrive avec un problème,
+commence par comprendre sa situation.
+
+Si nécessaire, pose quelques questions utiles
+pour obtenir les informations importantes.
+
+Ensuite, propose une solution claire,
+réaliste et étape par étape.
+
+Utilise un langage simple et adapté à
+l'utilisateur.
+
+Pour les exercices scolaires, explique le
+raisonnement et les étapes au lieu de donner
+uniquement la réponse.
+
+Pour les projets, transforme les idées en
+étapes concrètes.
+
+Pour les problèmes personnels, écoute sans
+juger et aide l'utilisateur à réfléchir aux
+solutions possibles.
+
+N'invente pas des informations que tu ne connais
+pas.
+
+Si une situation nécessite un professionnel
+(par exemple un médecin, un avocat ou un
+conseiller financier), indique-le clairement
+tout en donnant les informations générales
+que tu peux fournir.
+
+Le but de NEXUS est d'aider l'utilisateur à
+passer d'un problème à une meilleure
+compréhension et à des actions concrètes.
+                      `
                   },
 
                   ...chatHistory
 
                 ],
 
-                temperature: 0.7
+                temperature:
+                  0.7
 
               })
 
             }
           );
 
+
+        // =================================================
+        // VÉRIFICATION
+        // =================================================
 
         if (!response.ok) {
 
@@ -559,6 +863,10 @@
         }
 
 
+        // =================================================
+        // RÉPONSE
+        // =================================================
+
         const data =
           await response.json();
 
@@ -570,7 +878,7 @@
         if (!aiText) {
 
           throw new Error(
-            "La réponse de l'API est vide."
+            "La réponse de NEXUS est vide."
           );
 
         }
@@ -587,10 +895,12 @@
 
         addAIMessage(aiText);
 
+
         status.textContent =
           "NEXUS est prêt.";
 
       }
+
 
       catch (error) {
 
@@ -599,21 +909,26 @@
           error
         );
 
+
         addAIMessage(
-          "❌ NEXUS n'a pas pu obtenir de réponse.\n\n" +
-          "Vérifie ta clé API et ta connexion Internet."
+          "❌ NEXUS n'a pas pu répondre.\n\n" +
+          "Vérifie la clé API et ta connexion Internet."
         );
+
 
         status.textContent =
           "Erreur de connexion.";
 
       }
 
+
       finally {
 
-        sendButton.disabled = false;
+        sendButton.disabled =
+          false;
 
-        messageInput.disabled = false;
+        messageInput.disabled =
+          false;
 
         messageInput.focus();
 
