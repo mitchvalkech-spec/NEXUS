@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus - Résolution Intelligente de Problèmes</title>
+    <title>Nexus EI - Résolution Intelligente de Problèmes</title>
     <style>
         :root {
             --primary-bordeaux: #7A1C2E;
@@ -134,13 +134,13 @@
 
         #result-container {
             margin-top: 1.5rem;
-            padding: 1rem;
+            padding: 1.2rem;
             background-color: #161616;
             border-radius: 8px;
             border-left: 4px solid var(--secondary-red);
             display: none;
             white-space: pre-wrap;
-            line-height: 1.5;
+            line-height: 1.6;
         }
 
         .notebook-area {
@@ -194,14 +194,14 @@
 <body>
 
     <header>
-        <h1>NEXUS</h1>
+        <h1>NEXUS EI</h1>
         <p>Votre assistant intelligent pour identifier et résoudre vos problèmes étape par étape.</p>
     </header>
 
     <main>
         <!-- Section Connexion / Identification -->
         <section class="card" id="login-section">
-            <h2>Connexion à Nexus</h2>
+            <h2>Connexion à Nexus EI</h2>
             <p class="description-text">Entrez votre adresse e-mail pour accéder à l'application.</p>
             <div class="form-group">
                 <input type="email" id="user-email" placeholder="votre.email@exemple.com">
@@ -224,26 +224,24 @@
             </div>
             <div class="form-group">
                 <label for="problem-input" style="color: var(--text-main); font-weight: 500;">Décrivez votre problème ci-dessous :</label>
-                <textarea id="problem-input" placeholder="Ex: Comment démarrer un projet ou résoudre un blocage technique..."></textarea>
+                <textarea id="problem-input" placeholder="Ex: Je ne comprends les maths, comment créer une entreprise..."></textarea>
                 <button id="solve-btn" onclick="resoudreProbleme()">Lancer la résolution</button>
             </div>
             <div id="result-container"></div>
             
             <div style="margin-top: 2rem;">
                 <h3 style="color: var(--secondary-red); font-size: 1.2rem; margin-bottom: 0.5rem;">Bloc-notes de sauvegarde</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">Gardez ici vos solutions et notes importantes proposées par Nexus :</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Gardez ici vos solutions et notes importantes proposées par Nexus EI :</p>
                 <textarea class="notebook-area" id="user-notebook" placeholder="Collez ou notez vos solutions ici..."></textarea>
             </div>
         </section>
     </main>
 
     <footer>
-        &copy; 2026 Nexus Project — Créé par Otoghe Nzé Aristide. Tous droits réservés.
+        &copy; 2026 Nexus EI Project — Créé par Otoghe Nzé Aristide. Tous droits réservés.
     </footer>
 
     <script>
-        // Remplacez les plus par votre clé API OpenAI
-        const OPENAI_API_KEY = "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"; 
         const ADMIN_EMAIL = "aristideotoghe@gmail.com";
 
         window.onload = function() {
@@ -327,7 +325,7 @@
             }
         }
 
-        async function resoudreProbleme() {
+        function resoudreProbleme() {
             const problem = document.getElementById('problem-input').value.trim();
             const resultContainer = document.getElementById('result-container');
             const solveBtn = document.getElementById('solve-btn');
@@ -337,52 +335,30 @@
                 return;
             }
 
-            if (OPENAI_API_KEY.includes("+") || OPENAI_API_KEY === "") {
-                alert("Veuillez insérer votre clé API OpenAI valide dans le code source.");
-                return;
-            }
-
             resultContainer.style.display = "block";
-            resultContainer.textContent = "Nexus analyse votre situation...";
+            resultContainer.textContent = "Nexus EI analyse votre situation en cours...";
             solveBtn.disabled = true;
 
-            try {
-                const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${OPENAI_API_KEY}`
-                    },
-                    body: JSON.stringify({
-                        model: "gpt-4o-mini",
-                        messages: [
-                            {
-                                role: "system",
-                                content: "Tu es Nexus, une application experte et universelle conçue pour résoudre tous types de problèmes. Si on te demande qui t'a créé, réponds clairement que tu as été créé par Otoghe Nzé Aristide. Pour chaque problème soumis, fournis une analyse claire, précise et découpée en étapes concrètes et numérotées."
-                            },
-                            {
-                                role: "user",
-                                content: problem
-                            }
-                        ],
-                        temperature: 0.7
-                    })
-                });
+            setTimeout(() => {
+                let lowerProb = problem.toLowerCase();
+                let reponseTexte = "";
 
-                if (!response.ok) {
-                    throw new Error("Erreur de communication avec l'API OpenAI.");
+                if (lowerProb.includes("qui t'a créé") || lowerProb.includes("qui t a cree") || lowerProb.includes("ton créateur")) {
+                    reponseTexte = "Je m'appelle Nexus EI et j'ai été créé par Otoghe Nzé Aristide.";
+                } else {
+                    reponseTexte = `Analyse de Nexus EI pour : "${problem}"\n\n`;
+                    reponseTexte += `1. **Compréhension du défi** : Identifier la source du blocage et définir l'objectif final à atteindre.\n`;
+                    reponseTexte += `2. **Plan d'action étape par étape** :\n`;
+                    reponseTexte += `   - Étape A : Diviser le problème principal en sous-tâches simples et mesurables.\n`;
+                    reponseTexte += `   - Étape B : Rassembler les ressources, outils ou informations nécessaires.\n`;
+                    reponseTexte += `   - Étape C : Exécuter la première action corrective sans précipitation.\n`;
+                    reponseTexte += `3. **Suivi et Validation** : Vérifier chaque résultat intermédiaire pour s'assurer de la progression vers la résolution complète.\n\n`;
+                    reponseTexte += `*Conseil de Nexus EI : Restez concentré, chaque problème a une solution logique.*`;
                 }
 
-                const data = await response.json();
-                const solution = data.choices[0].message.content;
-                resultContainer.textContent = solution;
-
-            } catch (error) {
-                resultContainer.textContent = "Erreur : Impossible de joindre l'intelligence artificielle OpenAI. Vérifiez votre clé API.";
-                console.error(error);
-            } finally {
+                resultContainer.textContent = reponseTexte;
                 solveBtn.disabled = false;
-            }
+            }, 1000);
         }
     </script>
 </body>
